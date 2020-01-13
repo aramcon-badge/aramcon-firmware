@@ -8,13 +8,14 @@ from adafruit_ble.services.nordic import UARTService
 from adafruit_ble.advertising import Advertisement
 from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
 from arambadge import badge
+from .nameservice import NameService
 from . import ui
 
 class NametagsApp:
     def __init__(self, init_ui = True):
         self.ble = BLERadio()
-        self.name_service = UARTService()
-        self.advertisement = ProvideServicesAdvertisement(self.name_service)
+        self.nameservice = NameService()
+        self.advertisement = ProvideServicesAdvertisement(self.nameservice)
         self.scan_response = Advertisement()
         self.scan_response.complete_name = "BADGE-{}".format(self.addr_suffix)
         if init_ui:
@@ -29,6 +30,8 @@ class NametagsApp:
         return "{:02X}{:02X}{:02X}".format(addr[3], addr[4], addr[5])
 
     def update(self):
+        if self.ble.connected:
+            self.nameservice.update()
         if badge.action:
             while badge.action:
                 pass
