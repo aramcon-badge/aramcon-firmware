@@ -5,6 +5,7 @@ from eeprom import EEPROM
 import addons
 import time
 import supervisor
+from nametags.nametags import NametagsApp
 
 print("AramCon Badge 2020 Firmware")
 
@@ -18,10 +19,10 @@ def i2c_device_available(i2c, addr):
 e = EEPROM(badge.i2c)
 addon = addons.read_addon_descriptor(e)
 
-if not addon:
-    badge.show_bitmap('assets/banner.bmp')
+nametags = NametagsApp(not addon)
 
 while True:
+    nametags.update()
     for i in range(4):
         badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
     badge.vibration = badge.action
