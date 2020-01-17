@@ -26,15 +26,12 @@ class EEPROMVFS:
         if op == 5:  # BP_IOCTL_SEC_SIZE
             return self.SECTOR_SIZE
 
-def mount_eeprom(eeprom, path):
+def mount_eeprom(eeprom, path, readonly = False):
     eepromvfs = EEPROMVFS(eeprom)
-    try:
-        fs = storage.VfsFat(eepromvfs)
-        storage.mount(fs, path)
-        return fs
-    except OSError:
-        # The diskette is probably not initialized, format it first
-        storage.VfsFat.mkfs(eepromvfs)
-        fs = storage.VfsFat(eepromvfs)
-        storage.mount(fs, path)
-        return fs
+    fs = storage.VfsFat(eepromvfs)
+    storage.mount(fs, path, readonly=readonly)
+    return fs
+
+def format_eeprom(eeprom):
+    eepromvfs = EEPROMVFS(eeprom)
+    return storage.VfsFat.mkfs(eepromvfs)
