@@ -1,10 +1,10 @@
+from arambadge import badge
 import time
 import microcontroller
 import digitalio
 from pulseio import PWMOut
-from arambadge import badge
 
-badge.show_bitmap('drivers/assets/speaker.bmp')
+badge.show_bitmap('assets/speaker.bmp')
  
 SAO_GPIO1 = microcontroller.pin.P0_04
 SAO_GPIO2 = microcontroller.pin.P0_05
