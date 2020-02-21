@@ -3,7 +3,6 @@
 # Copyright (c) 2019 Uri Shaked
 
 import board
-import busio
 from digitalio import DigitalInOut, Pull
 from analogio import AnalogIn
 import displayio
@@ -117,14 +116,14 @@ class Badge:
     def i2c(self):
         """direct access to the I2C bus"""
         if not self._i2c:
-            self._i2c = busio.I2C(board.SCL, board.SDA)
+            self._i2c = board.I2C()
         return self._i2c
 
     @property
     def spi(self):
         """direct access to the SPI bus"""
         if not self._spi:
-            self._spi = busio.SPI(board.SCK, MISO=board.MISO, MOSI=board.MOSI)
+            self._spi = board.SPI()
         return self._spi
 
     @property 
