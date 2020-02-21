@@ -7,6 +7,8 @@ import time
 import supervisor
 from nametags.nametags import NametagsApp
 
+REFRESH_TIME = 3
+
 print("AramCon Badge 2020 Firmware")
 
 def i2c_device_available(i2c, addr):
@@ -19,10 +21,17 @@ def i2c_device_available(i2c, addr):
 e = EEPROM(badge.i2c)
 addon = addons.read_addon_descriptor(e)
 
-nametags = NametagsApp(not addon)
+apps = [NametagsApp(not addon)]
+active_app = apps[0]
+
+last_update = time.monotonic()
 
 while True:
-    nametags.update()
+    
+    active_app.update()
+    if (time.monotonic() - last_update) > REFRESH_TIME:
+        active_app.render()
+
     for i in range(4):
         badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
     badge.vibration = badge.action

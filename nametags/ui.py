@@ -52,8 +52,4 @@ def display_qr(addr):
     badge.display.refresh()
 
 def display_nametag():
-    try:
-        badge.show_bitmap('/nametag.bmp')
-        return True
-    except:
-        return False
+    badge.show_bitmap('/nametag.bmp')
