@@ -1,16 +1,13 @@
 from arambadge import badge
 import time
-import microcontroller
+import board
 import digitalio
 from pulseio import PWMOut
 
-badge.show_bitmap('assets/speaker.bmp')
+badge.show_bitmap('drivers/assets/speaker.bmp')
  
-SAO_GPIO1 = microcontroller.pin.P0_04
-SAO_GPIO2 = microcontroller.pin.P0_05
-
-audio = PWMOut(SAO_GPIO1, duty_cycle=0, frequency=440, variable_frequency=True)
-led = digitalio.DigitalInOut(SAO_GPIO2)
+audio = PWMOut(board.GPIO1, duty_cycle=0, frequency=440, variable_frequency=True)
+led = digitalio.DigitalInOut(board.GPIO2)
 led.switch_to_output(True)
 
 def note(name):
