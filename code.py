@@ -6,6 +6,7 @@ import addons
 import time
 import supervisor
 from nametags.nametags import NametagsApp
+from apps.clock.clock import ClockApp
 
 print("AramCon Badge 2020 Firmware")
 
@@ -20,12 +21,16 @@ e = EEPROM(badge.i2c)
 addon = addons.read_addon_descriptor(e)
 
 nametags = NametagsApp(not addon)
+clock = ClockApp()
 
 while True:
     nametags.update()
     for i in range(4):
         badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
     badge.vibration = badge.action
+
+    if badge.down:
+        clock.run()
 
     addon = addons.read_addon_descriptor(e)
     if addon:
