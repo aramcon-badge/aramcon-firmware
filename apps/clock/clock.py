@@ -19,7 +19,7 @@ class ClockApp:
         self.assets[':'] = self.assets['colon']
 
     def draw_time(self, dt, x, y):
-        timestr = '%02d:%02d' % (dt.tm_hour, dt.tm_min)
+        timestr = '%02d:%02d' % (dt.tm_min, dt.tm_sec)
         group = displayio.Group(max_size=len(timestr), x=x, y=y)
         xpos = 0
         for ch in timestr:
@@ -30,9 +30,9 @@ class ClockApp:
 
     def run(self):
         display = badge.display
+        rtc_instance = rtc.RTC()
 
         while True:
-            rtc_instance = rtc.RTC()
             group = displayio.Group()
             group.append(Rect(0, 0, display.width, display.height, fill=0xffffff))
             group.append(self.draw_time(rtc_instance.datetime, 48, 40))
@@ -40,4 +40,4 @@ class ClockApp:
             while display.time_to_refresh > 0:
                 pass
             display.refresh()
-            time.sleep(60-time.time()%60)
+            #time.sleep(1)

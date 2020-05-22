@@ -139,7 +139,7 @@ class Badge:
             import adafruit_il0373
             displayio.release_displays()
             self._display = adafruit_il0373.IL0373(self.display_bus, width=296, height=128, rotation=270,
-                                                   seconds_per_frame=5, busy_pin=board.DISP_BUSY, swap_rams=True)
+                                                   seconds_per_frame=0.195, busy_pin=board.DISP_BUSY, swap_rams=True)
         return self._display
 
     @property
