@@ -10,9 +10,9 @@ import neopixel
 
 class Badge:
     BTN_UP = 1 << 0
-    BTN_DOWN = 1 << 1
-    BTN_RIGHT = 1 << 2
-    BTN_LEFT = 1 << 3
+    BTN_LEFT = 1 << 1
+    BTN_DOWN = 1 << 2
+    BTN_RIGHT = 1 << 3
     BTN_ACTION = 1 << 4
 
     def __init__(self):
