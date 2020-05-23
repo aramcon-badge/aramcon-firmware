@@ -29,6 +29,7 @@ menu = MenuApp()
 main_screen()
 
 refresh_counter = 5
+last_addon = None
 while True:
     if refresh_counter and not badge.display.time_to_refresh:
         main_screen()
@@ -50,9 +51,13 @@ while True:
 
     addon = addons.read_addon_descriptor(e)
     if addon:
-        print("Add-on connected: {}".format(addon['name']))
-        driver = __import__('drivers/' + addon['driver'].replace('.py', ''))
-        try:
-            driver.main(addon)
-        finally:
-            supervisor.reload()
+        if last_addon != addon['driver']:
+            print("Add-on connected: {}".format(addon['name']))
+            last_addon = addon['driver']
+            driver = __import__('drivers/' + addon['driver'].replace('.py', ''))
+            try:
+                driver.main(addon)    
+            except:
+                supervisor.reload()
+    else:
+        last_addon = None
