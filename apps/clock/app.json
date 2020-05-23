@@ -1,0 +1,5 @@
+{
+"menu_item": "Clock",
+"author": "Uri Shaked",
+"main": "clock.py"
+}

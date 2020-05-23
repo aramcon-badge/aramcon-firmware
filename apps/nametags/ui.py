@@ -50,10 +50,3 @@ def display_qr(addr):
     while badge.display.time_to_refresh > 0:
         pass
     badge.display.refresh()
-
-def display_nametag():
-    try:
-        badge.show_bitmap('/nametag.bmp')
-        return True
-    except:
-        return False

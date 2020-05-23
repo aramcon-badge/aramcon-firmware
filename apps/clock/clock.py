@@ -66,12 +66,16 @@ class ClockApp:
             else:
                 return False
             return True
+        if buttons & badge.BTN_ACTION:
+            self.running = False
+            return True
         return False
 
     def run(self):
         display = badge.display
+        self.running = True
 
-        while True:
+        while self.running:
             group = displayio.Group()
             group.append(Rect(0, 0, display.width, display.height, fill=0xffffff))
             group.append(self.draw_time(self.rtc.datetime, 48, 40))
@@ -80,3 +84,6 @@ class ClockApp:
                 pass
             if not self.process_input():
                 display.refresh()
+
+def main():
+    return ClockApp()

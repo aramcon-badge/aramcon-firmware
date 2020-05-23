@@ -1,12 +1,10 @@
 # AramCon Badge 2020 Main Firmware
-
 from arambadge import badge
 from eeprom import EEPROM
 import addons
 import time
 import supervisor
-from apps.nametags.nametags import NametagsApp
-from apps.clock.clock import ClockApp
+from apps.menu.main import MenuApp
 
 print("AramCon Badge 2020 Firmware")
 
@@ -18,19 +16,30 @@ def i2c_device_available(i2c, addr):
             i2c.unlock()
 
 e = EEPROM(badge.i2c)
-addon = addons.read_addon_descriptor(e)
+menu = MenuApp()
 
-nametags = NametagsApp(not addon)
-clock = ClockApp()
-
+name_refresh = 5
 while True:
-    nametags.update()
+    if name_refresh:
+        try:
+            badge.show_bitmap('nametag.bmp')
+            name_refresh -= 1
+        except:
+            name_refresh = 0
+
     for i in range(4):
         badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
-    badge.vibration = badge.action
+    badge.vibration = badge.down
 
-    if badge.down:
-        clock.run()
+    buttons = badge.gamepad.get_pressed()
+    if buttons & badge.BTN_ACTION:
+        # Wait until the action button is released
+        badge.vibration = True
+        while badge.gamepad.get_pressed() & badge.BTN_ACTION:
+            pass
+        badge.vibration = False
+        menu.run()
+        name_refresh = 5
 
     addon = addons.read_addon_descriptor(e)
     if addon:
