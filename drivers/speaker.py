@@ -4,12 +4,6 @@ import board
 import digitalio
 from pulseio import PWMOut
 
-badge.show_bitmap('drivers/assets/speaker.bmp')
- 
-audio = PWMOut(board.GPIO1, duty_cycle=0, frequency=440, variable_frequency=True)
-led = digitalio.DigitalInOut(board.GPIO2)
-led.switch_to_output(True)
-
 def note(name):
     octave = int(name[-1])
     PITCHES = "c,c#,d,d#,e,f,f#,g,g#,a,a#,b".split(",")
@@ -29,15 +23,25 @@ sequence = [
   ("d5", 2), ("c5", 6), (None, 2)
 ]
 
-for (notename, eigths) in sequence:
-    length = eigths * 0.1
-    if notename:
-        led.value = False
-        audio.frequency = round(note(notename))
-        audio.duty_cycle = 0x8000
-    time.sleep(length)
-    led.value = True
-    audio.duty_cycle = 0
-    time.sleep(0.025)
-
-time.sleep(3)
+def main(addon):
+    badge.show_bitmap('drivers/assets/speaker.bmp')
+    
+    audio = PWMOut(board.GPIO1, duty_cycle=0, frequency=440, variable_frequency=True)
+    led = digitalio.DigitalInOut(board.GPIO2)
+    led.switch_to_output(True)
+    try:
+        for (notename, eigths) in sequence:
+            length = eigths * 0.1
+            if notename:
+                led.value = False
+                audio.frequency = round(note(notename))
+                audio.duty_cycle = 0x8000
+            time.sleep(length)
+            led.value = True
+            audio.duty_cycle = 0
+            time.sleep(0.025)
+        
+        time.sleep(3)
+    finally:
+        led.deinit()
+        audio.deinit()
