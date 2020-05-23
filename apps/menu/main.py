@@ -10,19 +10,26 @@ from adafruit_display_shapes.rect import Rect
 APP_DIR = "apps"
 MENU_ROOT = '/'.join(__file__.split('/')[:-1])
 
+def load_app(app_path):
+    app_file = "{}/app.json".format(app_path)
+    try:
+        app_json = open(app_file, 'r')
+        manifest = json.load(app_json)
+        manifest['path'] = app_path
+        return manifest
+    except:
+        return None
+
 def load_apps():
     apps = []
+    floppy_app = load_app("/floppy")
+    if floppy_app:
+        apps.append(floppy_app)
     for app_name in os.listdir(APP_DIR):
         app_path = "{}/{}".format(APP_DIR, app_name)
-        app_file = "{}/app.json".format(app_path)
-        manifest = {}
-        try:
-            app_json = open(app_file, 'r')
-            manifest = json.load(app_json)
-            manifest['path'] = app_path
-        except:
-            continue
-        apps.append(manifest)
+        app = load_app(app_path)
+        if app:
+            apps.append(app)
     return apps
 
 def run_app(app):

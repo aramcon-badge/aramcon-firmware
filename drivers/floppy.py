@@ -71,6 +71,10 @@ def create_eeprom(addon):
     return EEPROM(badge.i2c, eeprom_addr=eeprom_addr, eeprom_size=eeprom_size, page_size=page_size)
 
 def main(addon):
+    try:
+        storage.umount('/floppy')
+    except:
+        pass
     print("Floppy disk driver v1.0")
     eeprom = create_eeprom(addon)
     fs = mount_eeprom(eeprom, "/floppy")
@@ -80,8 +84,8 @@ def main(addon):
     if isdir('/viral'):
         print("Copying files to floppy")
         prepare_floppy('/viral', fs)
+        storage.umount('/floppy')
         print("Floppy ready!")
     else:
         if isfile('/floppy/main.py'):
             __import__('/floppy/main')
-    storage.umount('/floppy')
