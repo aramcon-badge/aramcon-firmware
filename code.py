@@ -5,7 +5,7 @@ from eeprom import EEPROM
 import addons
 import time
 import supervisor
-from nametags.nametags import NametagsApp
+from apps.nametags.nametags import NametagsApp
 from apps.clock.clock import ClockApp
 
 print("AramCon Badge 2020 Firmware")
