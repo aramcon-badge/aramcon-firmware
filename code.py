@@ -4,6 +4,7 @@ from eeprom import EEPROM
 import addons
 import time
 import supervisor
+from welcome import show_welcome
 from apps.menu.main import MenuApp
 
 print("AramCon Badge 2020 Firmware")
@@ -15,17 +16,23 @@ def i2c_device_available(i2c, addr):
         finally:
             i2c.unlock()
 
+def main_screen():
+    try:
+        badge.show_bitmap('nametag.bmp')
+    except:
+        show_welcome()
+        badge.display.refresh()
+
 e = EEPROM(badge.i2c)
 menu = MenuApp()
 
-name_refresh = 5
+main_screen()
+
+refresh_counter = 5
 while True:
-    if name_refresh:
-        try:
-            badge.show_bitmap('nametag.bmp')
-            name_refresh -= 1
-        except:
-            name_refresh = 0
+    if refresh_counter and not badge.display.time_to_refresh:
+        main_screen()
+        refresh_counter -= 1
 
     for i in range(4):
         badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
@@ -39,7 +46,7 @@ while True:
             pass
         badge.vibration = False
         menu.run()
-        name_refresh = 5
+        refresh_counter = 5
 
     addon = addons.read_addon_descriptor(e)
     if addon:
