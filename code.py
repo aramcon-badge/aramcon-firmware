@@ -55,9 +55,12 @@ while True:
             print("Add-on connected: {}".format(addon['name']))
             last_addon = addon['driver']
             driver = __import__('drivers/' + addon['driver'].replace('.py', ''))
+            had_error = True
             try:
-                driver.main(addon)    
-            except:
-                supervisor.reload()
+                driver.main(addon)
+                had_error = False
+            finally:
+                if had_error:
+                    supervisor.reload()
     else:
         last_addon = None
