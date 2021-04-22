@@ -166,7 +166,7 @@ class SI4703:
             print('[Si4703] Write: {}'.format(hexlify(registers_batch)))
 
         with self._device as i2c:
-            i2c.write(registers_batch, stop=True)
+            i2c.write(registers_batch)
 
         return True
 
