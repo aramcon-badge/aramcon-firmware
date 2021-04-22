@@ -1,6 +1,6 @@
-# AramCon 2020 Badge Firmware
+# AramCon 2 Badge Firmware
 
-The main firmware code for the AramCon 2020 Badge.
+The main firmware code for the AramCon 2 Badge.
 
 ## Installation
 

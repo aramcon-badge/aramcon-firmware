@@ -1,4 +1,4 @@
-# AramCon Badge 2020 Main Firmware
+# AramCON 2 Badge Main Firmware
 from arambadge import badge
 from eeprom import EEPROM
 import addons
@@ -7,7 +7,7 @@ import supervisor
 from welcome import show_welcome
 from apps.menu.main import MenuApp
 
-print("AramCon Badge 2020 Firmware")
+print("AramCON 2 Badge Firmware")
 
 def i2c_device_available(i2c, addr):
     if i2c.try_lock():
