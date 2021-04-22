@@ -39,8 +39,7 @@ class EEPROM:
         while not self._i2c.try_lock():
             pass
         try:
-            self._i2c.writeto(self._addr, bytearray(mem_addr), stop=False)
-            self._i2c.readfrom_into(self._addr, buf)
+            self._i2c.writeto_then_readfrom(self._addr, bytearray(mem_addr), buf)
         finally:
             self._i2c.unlock()
     
