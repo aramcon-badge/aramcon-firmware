@@ -4,13 +4,11 @@ The main firmware code for the AramCon 2 Badge.
 
 ## Installation
 
-1. Download the lastest [CircuitPython Bundle 5.x Package](https://circuitpython.org/libraries)
-2. Copy the following libraries to the `lib` folder on your badge drive:
-   - adafruit_ble
-   - adafruit_display_shapes
-   - adafruit_display_text
-   - adafruit_il0373
-   - adafruit_lis3dh
-   - adafruit_miniqr
-   - neopixel
-3. Copy all the python files from this folder to your badge drive
+1. Copy the content of this folder to your badge drive. You can skip the `.git` directory.
+2. Install the [required libraries](requirements.txt). The recommended way is to use the [CircUp package manager](https://learn.adafruit.com/keep-your-circuitpython-libraries-on-devices-up-to-date-with-circup/install-circup):
+
+    ```
+    circup install --py -r requirements.txt
+    ```
+
+    Alternatively, download the lastest [CircuitPython Bundle 6.x Package](https://circuitpython.org/libraries), extract it, and copy the `lib` folder to your badge drive.

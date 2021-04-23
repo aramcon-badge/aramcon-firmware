@@ -1,0 +1,7 @@
+adafruit_il0373==1.3.7
+adafruit_lis3dh==5.1.9
+adafruit_miniqr==1.3.6
+neopixel==6.0.3
+adafruit_ble==8.0.0
+adafruit_display_text==2.18.3
+adafruit_display_shapes==2.0.8
