@@ -1,0 +1,5 @@
+{
+"menu_item": "RockPaperScissors",
+"author": "Benny Meisels",
+"main": "rock_paper_scissors.py"
+}
