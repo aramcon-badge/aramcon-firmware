@@ -71,7 +71,7 @@ class ClockApp:
             return True
         return False
 
-    def run(self):
+    async def run(self):
         display = badge.display
         self.running = True
 

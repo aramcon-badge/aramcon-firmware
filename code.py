@@ -6,6 +6,7 @@ import time
 import supervisor
 from welcome import show_welcome
 from apps.menu.main import MenuApp
+import tasko
 
 print("AramCON 2 Badge Firmware")
 
@@ -26,41 +27,46 @@ def main_screen():
 e = EEPROM(badge.i2c)
 menu = MenuApp()
 
-main_screen()
 
-refresh_counter = 5
-last_addon = None
-while True:
-    if refresh_counter and not badge.display.time_to_refresh:
-        main_screen()
-        refresh_counter -= 1
+async def main_coroutine():
+    main_screen()
 
-    for i in range(4):
-        badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
-    badge.vibration = badge.down
+    refresh_counter = 5
+    last_addon = None
+    while True:
+        if refresh_counter and not badge.display.time_to_refresh:
+            main_screen()
+            refresh_counter -= 1
 
-    buttons = badge.gamepad.get_pressed()
-    if buttons & badge.BTN_ACTION:
-        # Wait until the action button is released
-        badge.vibration = True
-        while badge.gamepad.get_pressed() & badge.BTN_ACTION:
-            pass
-        badge.vibration = False
-        menu.run()
-        refresh_counter = 5
+        for i in range(4):
+            badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
+        badge.vibration = badge.down
 
-    addon = addons.read_addon_descriptor(e)
-    if addon:
-        if last_addon != addon['driver']:
-            print("Add-on connected: {}".format(addon['name']))
-            last_addon = addon['driver']
-            driver = __import__('drivers/' + addon['driver'].replace('.py', ''))
-            had_error = True
-            try:
-                driver.main(addon)
-                had_error = False
-            finally:
-                if had_error:
-                    supervisor.reload()
-    else:
-        last_addon = None
+        buttons = badge.gamepad.get_pressed()
+        if buttons & badge.BTN_ACTION:
+            # Wait until the action button is released
+            badge.vibration = True
+            while badge.gamepad.get_pressed() & badge.BTN_ACTION:
+                pass
+            badge.vibration = False
+            await menu.run()
+            refresh_counter = 5
+
+        addon = addons.read_addon_descriptor(e)
+        if addon:
+            if last_addon != addon['driver']:
+                print("Add-on connected: {}".format(addon['name']))
+                last_addon = addon['driver']
+                driver = __import__('drivers/' + addon['driver'].replace('.py', ''))
+                had_error = True
+                try:
+                    driver.main(addon)
+                    had_error = False
+                finally:
+                    if had_error:
+                        supervisor.reload()
+        else:
+            last_addon = None
+
+tasko.schedule(hz=1, coroutine_function=main_coroutine)
+tasko.run()

@@ -38,7 +38,7 @@ class NametagsApp:
             return True
         return False
 
-    def run(self):
+    async def run(self):
         self.running = True
         while self.running:
             self.process_input()

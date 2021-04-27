@@ -3,6 +3,7 @@ import json
 import displayio
 import terminalio
 import time
+import tasko
 from arambadge import badge
 from adafruit_display_text import label
 from adafruit_display_shapes.rect import Rect
@@ -32,13 +33,13 @@ def load_apps():
             apps.append(app)
     return apps
 
-def run_app(app):
+async def run_app(app):
     action = app.get('menu_action', None)
     if action:
         return action()
     main = app.get('main', 'main.py')
     module = __import__('{}/{}'.format(app['path'], main.replace('.py', '')))
-    return module.main().run()
+    return await module.main().run()
 
 class MenuApp:
     def __init__(self):
@@ -90,7 +91,7 @@ class MenuApp:
         # Show it
         display.show(screen)
 
-    def process_input(self):
+    async def process_input(self):
         buttons = badge.gamepad.get_pressed() 
         num_apps = len(self.apps)
         if buttons & badge.BTN_UP:
@@ -106,14 +107,14 @@ class MenuApp:
             # Wait until the action button is released
             while badge.gamepad.get_pressed() & badge.BTN_ACTION:
                 pass
-            time.sleep(0.1)
+            await tasko.sleep(0.1)
             badge.vibration = False
-            run_app(self.apps[self.selection])
+            await run_app(self.apps[self.selection])
         else:
             return False
         return True
 
-    def run(self):
+    async def run(self):
         self.apps = list(filter(lambda app: 'menu_item' in app, load_apps()))
         self.apps.append({
             'icon': '{}/home.bmp'.format(MENU_ROOT),
@@ -126,7 +127,7 @@ class MenuApp:
             self.render()
             while badge.display.time_to_refresh > 0:
                 pass
-            if not self.process_input():
+            if not await self.process_input():
                 badge.display.refresh()
 
     def stop(self):
