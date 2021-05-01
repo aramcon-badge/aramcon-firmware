@@ -126,7 +126,7 @@ class MenuApp:
         while self.running:
             self.render()
             while badge.display.time_to_refresh > 0:
-                pass
+                await tasko.sleep(badge.display.time_to_refresh)
             if not await self.process_input():
                 badge.display.refresh()
 

@@ -17,9 +17,9 @@ def i2c_device_available(i2c, addr):
         finally:
             i2c.unlock()
 
-def main_screen():
+async def main_screen():
     try:
-        badge.show_bitmap('nametag.bmp')
+        await badge.show_bitmap('nametag.bmp')
     except:
         show_welcome()
         badge.display.refresh()
@@ -29,19 +29,21 @@ menu = MenuApp()
 
 
 async def main_coroutine():
-    main_screen()
+    await main_screen()
 
     refresh_counter = 5
     last_addon = None
     while True:
+        # TODO (async feature): understand if this logic needed
         if refresh_counter and not badge.display.time_to_refresh:
-            main_screen()
+            await main_screen()
             refresh_counter -= 1
 
         for i in range(4):
             badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
         badge.vibration = badge.down
 
+        # Transition to menu & apps
         buttons = badge.gamepad.get_pressed()
         if buttons & badge.BTN_ACTION:
             # Wait until the action button is released
@@ -52,6 +54,7 @@ async def main_coroutine():
             await menu.run()
             refresh_counter = 5
 
+        # Detect & run add-ons
         addon = addons.read_addon_descriptor(e)
         if addon:
             if last_addon != addon['driver']:
@@ -60,7 +63,7 @@ async def main_coroutine():
                 driver = __import__('drivers/' + addon['driver'].replace('.py', ''))
                 had_error = True
                 try:
-                    driver.main(addon)
+                    await driver.main(addon)
                     had_error = False
                 finally:
                     if had_error:

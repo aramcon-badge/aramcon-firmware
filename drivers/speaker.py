@@ -1,5 +1,6 @@
 from arambadge import badge
 import time
+import tasko
 import board
 import digitalio
 from pulseio import PWMOut
@@ -23,8 +24,8 @@ sequence = [
   ("d5", 2), ("c5", 6), (None, 2)
 ]
 
-def main(addon):
-    badge.show_bitmap('drivers/assets/speaker.bmp')
+async def main(addon):
+    await badge.show_bitmap('drivers/assets/speaker.bmp')
     
     audio = PWMOut(board.GPIO1, duty_cycle=0, frequency=440, variable_frequency=True)
     led = digitalio.DigitalInOut(board.GPIO2)
@@ -36,12 +37,12 @@ def main(addon):
                 led.value = False
                 audio.frequency = round(note(notename))
                 audio.duty_cycle = 0x8000
-            time.sleep(length)
+            await tasko.sleep(length)
             led.value = True
             audio.duty_cycle = 0
-            time.sleep(0.025)
+            await tasko.sleep(0.025)
         
-        time.sleep(3)
+        await tasko.sleep(3)
     finally:
         led.deinit()
         audio.deinit()

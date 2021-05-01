@@ -7,6 +7,7 @@ from digitalio import DigitalInOut, Pull
 from analogio import AnalogIn
 import displayio
 import neopixel
+import tasko
 
 class Badge:
     BTN_UP = 1 << 0
@@ -156,15 +157,18 @@ class Badge:
         """The battery voltage (if currently operating off the battery)"""
         return (self._battery.value * 3.3) / 65536
     
-    def show_bitmap(self, path, pixel_shader=displayio.ColorConverter()):
+    async def show_bitmap(self, path, pixel_shader=displayio.ColorConverter()):
         """Draws the bitmap from the given file. Must be in .bmp format"""
         image = displayio.OnDiskBitmap(open(path, "rb"))
         grid = displayio.TileGrid(image, pixel_shader=pixel_shader)
         group = displayio.Group(max_size=1)
         group.append(grid)
         self.display.show(group)
+        await self.wait_and_refresh_display()
+
+    async def wait_and_refresh_display(self):
         while self.display.time_to_refresh > 0:
-            pass
+            await tasko.sleep(self.display.time_to_refresh)
         self.display.refresh()
 
 badge = Badge()
