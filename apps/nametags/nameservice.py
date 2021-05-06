@@ -19,7 +19,7 @@ import storage
 
 class NameService(Service):
     uuid = StandardUUID(0xfeef)
-    _disp_rx = StreamIn(uuid=StandardUUID(0xfeee), timeout=1.0, buffer_size=64)
+    _disp_rx = StreamIn(uuid=StandardUUID(0xfeee), timeout=1.0, buffer_size=8192)
 
     def __init__(self):
         super().__init__()
@@ -29,7 +29,6 @@ class NameService(Service):
         self._palette[1] = 0xffffff
         self._offset = 0
         self._bufsize = 0
-        self._dirty = False
         self._ledstate = False
      
     def update(self):
@@ -53,9 +52,8 @@ class NameService(Service):
                     self._offset += 1
                 self._ledstate = not self._ledstate
                 badge.pixels.fill((0, 0, 0x10 * self._ledstate))
-        if self._dirty and badge.display.time_to_refresh == 0:
-            badge.display.refresh()
-            self._dirty = False
+                # TODO: once we have partial refresh, it'd be nice to draw the new pixels
+                # on screen as we receive them
 
     def _store_bitmap(self):
         try:
@@ -76,9 +74,11 @@ class NameService(Service):
         self._offset = 0
         self._bufsize = 0
         self._ledstate = False
-        badge.pixels.fill(0)
+        badge.pixels.fill((0, 0x10, 0))
         frame = displayio.Group()
         frame.append(displayio.TileGrid(self._bitmap, pixel_shader=self._palette))
         badge.display.show(frame)
-        self._dirty = True
+        while badge.display.time_to_refresh > 0:
+            pass
+        badge.display.refresh()
         self._store_bitmap()
