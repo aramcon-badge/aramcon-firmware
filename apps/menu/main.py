@@ -95,12 +95,20 @@ class MenuApp:
         num_apps = len(self.apps)
         if buttons & badge.BTN_UP:
             self.selection = (self.selection + num_apps - 1) % num_apps
+            while badge.gamepad.get_pressed() & badge.BTN_UP:
+                pass
         elif buttons & badge.BTN_DOWN:
             self.selection = (self.selection + 1) % num_apps
+            while badge.gamepad.get_pressed() & badge.BTN_DOWN:
+                pass
         elif buttons & badge.BTN_RIGHT:
             self.selection = (self.selection + num_apps - 3) % num_apps
+            while badge.gamepad.get_pressed() & badge.BTN_RIGHT:
+                pass
         elif buttons & badge.BTN_LEFT:
             self.selection = (self.selection + num_apps - 3) % num_apps
+            while badge.gamepad.get_pressed() & badge.BTN_LEFT:
+                pass
         elif buttons & badge.BTN_ACTION:
             badge.vibration = True
             # Wait until the action button is released
@@ -121,12 +129,17 @@ class MenuApp:
             'menu_action': self.stop
         })
         self.selection = 0
+        self.render()
+        while badge.display.time_to_refresh > 0:
+            pass
+        badge.display.refresh()
+
         self.running = True
         while self.running:
-            self.render()
-            while badge.display.time_to_refresh > 0:
-                pass
-            if not self.process_input():
+            if self.process_input():
+                self.render()
+                while badge.display.time_to_refresh > 0:
+                    pass
                 badge.display.refresh()
 
     def stop(self):

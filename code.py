@@ -32,7 +32,7 @@ refresh_counter = 5
 last_addon = None
 while True:
     if refresh_counter and not badge.display.time_to_refresh:
-        main_screen()
+        # main_screen()
         refresh_counter -= 1
 
     for i in range(4):
