@@ -28,13 +28,8 @@ menu = MenuApp()
 
 main_screen()
 
-refresh_counter = 5
 last_addon = None
 while True:
-    if refresh_counter and not badge.display.time_to_refresh:
-        main_screen()
-        refresh_counter -= 1
-
     for i in range(4):
         badge.pixels[i] = (255 * badge.left, 255 * badge.up, 255 * badge.right)
     badge.vibration = badge.down
@@ -47,7 +42,6 @@ while True:
             pass
         badge.vibration = False
         menu.run()
-        refresh_counter = 5
 
     addon = addons.read_addon_descriptor(e)
     if addon:
