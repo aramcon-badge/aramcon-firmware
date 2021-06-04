@@ -57,6 +57,7 @@ class FrameApp:
         self.running = True
         while self.running:
             group = displayio.Group()
+            group.append(Rect(0, 0, display.width, display.height, fill=0xffffff))
             group.append(self.draw_time(self.rtc.datetime, x, y))
             display.show(group)
             while display.time_to_refresh > 0:
