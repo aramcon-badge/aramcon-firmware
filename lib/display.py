@@ -124,54 +124,75 @@ QUICKER_START_SEQUENCE = bytearray(
     b"\x00\x00\x00\x00\x00\x00"
 )
 
-MODE_HYBRID     = 0
-MODE_NORMAL     = 1
-MODE_QUICK      = 2
-MODE_QUICKER    = 3
-
-MODE_PARAMETERS = {
-    MODE_HYBRID : (None, None, 15),
-    MODE_NORMAL  : (NORMAL_START_SEQUENCE, 5),
-    MODE_QUICK   : (QUICK_START_SEQUENCE, 1),
-    MODE_QUICKER : (QUICKER_START_SEQUENCE, 0.33)
-}
-
 class Display(adafruit_il0373.IL0373):
+    MODE_HYBRID = 0
+    MODE_NORMAL = 1
+    MODE_QUICK = 2
+    MODE_QUICKER = 3
+
+    MODE_PARAMETERS = {
+        MODE_HYBRID: (None, 1, 15),
+        MODE_NORMAL: (NORMAL_START_SEQUENCE, 5),
+        MODE_QUICK: (QUICK_START_SEQUENCE, 1),
+        MODE_QUICKER: (QUICKER_START_SEQUENCE, 0.33)
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.refresh_counter_since_full = 0
-        self.modes_stack = [MODE_HYBRID]
+        self._wait_until_refresh = 0
+        self._current_mode = Display.MODE_HYBRID
+        self.modes_stack = [Display.MODE_HYBRID]
         self._change_mode(self.modes_stack[-1])
 
     def refresh(self):
-        if self.modes_stack[-1] != MODE_HYBRID:
+        while time.time() < self._wait_until_refresh:
+            time.sleep(self._wait_until_refresh - time.time())
+
+        if self.modes_stack[-1] != Display.MODE_HYBRID:
+            while self.busy:
+                time.sleep(0.1)
             super().refresh()
             return
 
-        if self.refresh_counter_since_full > MODE_PARAMETERS[MODE_HYBRID][2]:
+        if self.refresh_counter_since_full > Display.MODE_PARAMETERS[Display.MODE_HYBRID][2]:
+            while self.busy:
+                time.sleep(0.1)
             super().refresh()
-            self._change_mode(MODE_QUICKER)
-            time.sleep(MODE_PARAMETERS[MODE_QUICK][1] + 0.1)
+            self._change_mode(Display.MODE_QUICKER)
+            while self.busy:
+                time.sleep(0.1)
             self.refresh_counter_since_full = 0
         else:
+            while self.busy:
+                time.sleep(0.1)
             super().refresh()
-            if self.refresh_counter_since_full == MODE_PARAMETERS[MODE_HYBRID][2]:
-                self._change_mode(MODE_QUICK)
+            if self.refresh_counter_since_full == Display.MODE_PARAMETERS[Display.MODE_HYBRID][2]:
+                self._change_mode(Display.MODE_QUICK)
             self.refresh_counter_since_full += 1
 
     def _change_mode(self, display_mode):
-        if display_mode != MODE_HYBRID:
-            super().update_refresh_mode(*MODE_PARAMETERS[display_mode])
+        if display_mode != Display.MODE_HYBRID:
+            self.update_refresh_mode(*Display.MODE_PARAMETERS[display_mode])
+            self._current_mode = display_mode
         else:
-            super().update_refresh_mode(*MODE_PARAMETERS[MODE_QUICKER])
+            self.update_refresh_mode(*Display.MODE_PARAMETERS[Display.MODE_QUICKER])
+            self._current_mode = Display.MODE_QUICKER
             self.refresh_counter_since_full = 0
+
+
+    def update_refresh_mode(self, start_sequence, seconds_per_frame):
+        super().update_refresh_mode(start_sequence, seconds_per_frame)
+
 
     def push_mode(self, display_mode):
         self._change_mode(display_mode)
         self.modes_stack.append(display_mode)
 
     def pop_mode(self):
+        if len(self.modes_stack) <= 1:
+            return None
         popped = self.modes_stack.pop()
         head = self.modes_stack[-1]
         self._change_mode(head)

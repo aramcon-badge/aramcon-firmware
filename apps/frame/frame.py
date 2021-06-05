@@ -40,7 +40,33 @@ class FrameApp:
 
     def process_input(self):
         buttons = badge.gamepad.get_pressed()
-        return False
+        if buttons & badge.BTN_UP:
+            print("Mode hybrid")
+            badge.display.push_mode(badge.display.MODE_HYBRID)
+            while badge.gamepad.get_pressed() & badge.BTN_UP:
+                pass
+        elif buttons & badge.BTN_DOWN:
+            print("Mode normal")
+            badge.display.push_mode(badge.display.MODE_NORMAL)
+            while badge.gamepad.get_pressed() & badge.BTN_DOWN:
+                pass
+        elif buttons & badge.BTN_RIGHT:
+            print("Mode quick")
+            badge.display.push_mode(badge.display.MODE_QUICK)
+            while badge.gamepad.get_pressed() & badge.BTN_RIGHT:
+                pass
+        elif buttons & badge.BTN_LEFT:
+            print("Mode quicker")
+            badge.display.push_mode(badge.display.MODE_QUICKER)
+            while badge.gamepad.get_pressed() & badge.BTN_LEFT:
+                pass
+        elif buttons & badge.BTN_ACTION:
+            print("Popped out:", badge.display.pop_mode())
+            while badge.gamepad.get_pressed() & badge.BTN_ACTION:
+                pass
+        else:
+            return False
+        return True
 
     def run(self):
         display = badge.display
@@ -69,6 +95,7 @@ class FrameApp:
             y += 5
             if y + DIGIT_HEIGHT >= display.height:
                 y = 0
+            self.process_input()
 
 def main():
     return FrameApp()
