@@ -1,5 +1,5 @@
 import adafruit_il0373
-import enum
+import time
 
 NORMAL_START_SEQUENCE = bytearray(
     b"\x01\x05\x03\x00\x2b\x2b\x09"  # power setting
@@ -124,18 +124,16 @@ QUICKER_START_SEQUENCE = bytearray(
     b"\x00\x00\x00\x00\x00\x00"
 )
 
-class DisplayMode(enum):
-    HYBRID = 0
-    NORMAL = 1
-    QUICK = 2
-    QUICKER = 3
-
+MODE_HYBRID     = 0
+MODE_NORMAL     = 1
+MODE_QUICK      = 2
+MODE_QUICKER    = 3
 
 MODE_PARAMETERS = {
-    DisplayMode.HYBRID : (None, None, 5),
-    DisplayMode.NORMAL  : (NORMAL_START_SEQUENCE, 5),
-    DisplayMode.QUICK   : (QUICK_START_SEQUENCE, 1),
-    DisplayMode.QUICKER : (QUICKER_START_SEQUENCE, 0.33)
+    MODE_HYBRID : (None, None, 15),
+    MODE_NORMAL  : (NORMAL_START_SEQUENCE, 5),
+    MODE_QUICK   : (QUICK_START_SEQUENCE, 1),
+    MODE_QUICKER : (QUICKER_START_SEQUENCE, 0.33)
 }
 
 class Display(adafruit_il0373.IL0373):
@@ -143,28 +141,30 @@ class Display(adafruit_il0373.IL0373):
         super().__init__(*args, **kwargs)
 
         self.refresh_counter_since_full = 0
-        self.modes_stack = [DisplayMode.HYBRID]
+        self.modes_stack = [MODE_HYBRID]
         self._change_mode(self.modes_stack[-1])
 
     def refresh(self):
-        if self.modes_stack[-1] != DisplayMode.HYBRID:
+        if self.modes_stack[-1] != MODE_HYBRID:
             super().refresh()
             return
 
-        if self.refresh_counter_since_full > MODE_PARAMETERS[DisplayMode.HYBRID][2]:
-            self._change_mode(DisplayMode.QUICK)
+        if self.refresh_counter_since_full > MODE_PARAMETERS[MODE_HYBRID][2]:
             super().refresh()
-            self._change_mode(DisplayMode.QUICKER)
+            self._change_mode(MODE_QUICKER)
+            time.sleep(MODE_PARAMETERS[MODE_QUICK][1] + 0.1)
             self.refresh_counter_since_full = 0
         else:
-            self.refresh_counter_since_full += 1
             super().refresh()
+            if self.refresh_counter_since_full == MODE_PARAMETERS[MODE_HYBRID][2]:
+                self._change_mode(MODE_QUICK)
+            self.refresh_counter_since_full += 1
 
     def _change_mode(self, display_mode):
-        if display_mode != DisplayMode.HYBRID:
-            self.update_refresh_mode(*MODE_PARAMETERS[display_mode])
+        if display_mode != MODE_HYBRID:
+            super().update_refresh_mode(*MODE_PARAMETERS[display_mode])
         else:
-            self.update_refresh_mode(*MODE_PARAMETERS[DisplayMode.QUICKER])
+            super().update_refresh_mode(*MODE_PARAMETERS[MODE_QUICKER])
             self.refresh_counter_since_full = 0
 
     def push_mode(self, display_mode):
