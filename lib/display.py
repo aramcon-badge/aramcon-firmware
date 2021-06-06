@@ -141,44 +141,41 @@ class Display(adafruit_il0373.IL0373):
         super().__init__(*args, **kwargs)
 
         self.refresh_counter_since_full = 0
-        self._wait_until_refresh = 0
-        self._current_mode = Display.MODE_HYBRID
         self.modes_stack = [Display.MODE_HYBRID]
         self._change_mode(self.modes_stack[-1])
 
     def refresh(self):
-        while time.time() < self._wait_until_refresh:
-            time.sleep(self._wait_until_refresh - time.time())
+        try:
+            if self.modes_stack[-1] != Display.MODE_HYBRID:
+                while self.busy:
+                    time.sleep(0.1)
+                super().refresh()
+                return
 
-        if self.modes_stack[-1] != Display.MODE_HYBRID:
-            while self.busy:
-                time.sleep(0.1)
-            super().refresh()
-            return
-
-        if self.refresh_counter_since_full > Display.MODE_PARAMETERS[Display.MODE_HYBRID][2]:
-            while self.busy:
-                time.sleep(0.1)
-            super().refresh()
-            self._change_mode(Display.MODE_QUICKER)
-            while self.busy:
-                time.sleep(0.1)
-            self.refresh_counter_since_full = 0
-        else:
-            while self.busy:
-                time.sleep(0.1)
-            super().refresh()
-            if self.refresh_counter_since_full == Display.MODE_PARAMETERS[Display.MODE_HYBRID][2]:
-                self._change_mode(Display.MODE_QUICK)
-            self.refresh_counter_since_full += 1
+            if self.refresh_counter_since_full > Display.MODE_PARAMETERS[Display.MODE_HYBRID][2]:
+                while self.busy:
+                    time.sleep(0.1)
+                super().refresh()
+                self._change_mode(Display.MODE_QUICKER)
+                while self.busy:
+                    time.sleep(0.1)
+                self.refresh_counter_since_full = 0
+            else:
+                while self.busy:
+                    time.sleep(0.1)
+                super().refresh()
+                if self.refresh_counter_since_full == Display.MODE_PARAMETERS[Display.MODE_HYBRID][2]:
+                    self._change_mode(Display.MODE_QUICK)
+                self.refresh_counter_since_full += 1
+        except RuntimeError as e:
+            import traceback
+            traceback.print_exc()
 
     def _change_mode(self, display_mode):
         if display_mode != Display.MODE_HYBRID:
             self.update_refresh_mode(*Display.MODE_PARAMETERS[display_mode])
-            self._current_mode = display_mode
         else:
             self.update_refresh_mode(*Display.MODE_PARAMETERS[Display.MODE_QUICKER])
-            self._current_mode = Display.MODE_QUICKER
             self.refresh_counter_since_full = 0
 
 
