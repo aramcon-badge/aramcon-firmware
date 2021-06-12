@@ -17,7 +17,7 @@ QUICK_START_SEQUENCE = bytearray(
     b"\x06\x03\x17\x17\x17"  # booster soft start
     b"\x04\x80\x01"  # power on and wait 200 ms
     b"\x00\x01\xbf"  # panel setting. Further filled in below.
-    b"\x50\x01\x97"  # CDI setting
+    b"\x50\x01\x37"  # CDI setting
     b"\x30\x01\x3C"  # PLL set to 50 Hz (M = 7, N = 4)
     b"\x61\x03\x80\x01\x28"  # Resolution
     b"\x82\x81\x12\x01"  # VCM DC and delay 50ms
@@ -73,7 +73,7 @@ QUICKER_START_SEQUENCE = bytearray(
     b"\x06\x03\x17\x17\x17"  # booster soft start
     b"\x04\x80\x01"  # power on and wait 200 ms
     b"\x00\x01\xbf"  # panel setting. Further filled in below.
-    b"\x50\x01\x97"  # CDI setting
+    b"\x50\x01\x37"  # CDI setting
     b"\x30\x01\x3C"  # PLL set to 50 Hz (M = 7, N = 4)
     b"\x61\x03\x80\x01\x28"  # Resolution
     b"\x82\x81\x12\x01"  # VCM DC and delay 50ms
