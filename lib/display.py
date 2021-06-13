@@ -168,8 +168,7 @@ class Display(adafruit_il0373.IL0373):
                     self._change_mode(Display.MODE_QUICK)
                 self.refresh_counter_since_full += 1
         except RuntimeError as e:
-            import traceback
-            traceback.print_exc()
+            print("Refresh Error", e)
 
     def _change_mode(self, display_mode):
         if display_mode != Display.MODE_HYBRID:

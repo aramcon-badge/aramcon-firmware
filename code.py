@@ -17,11 +17,15 @@ def i2c_device_available(i2c, addr):
             i2c.unlock()
 
 def main_screen():
+    badge.display.push_mode(badge.display.MODE_QUICK)
     try:
         badge.show_bitmap('nametag.bmp')
     except:
         show_welcome()
-        badge.display.refresh()
+    while badge.display.time_to_refresh > 0:
+        pass
+    badge.display.refresh()
+    badge.display.pop_mode()
 
 e = EEPROM(badge.i2c)
 menu = MenuApp()
@@ -42,6 +46,7 @@ while True:
             pass
         badge.vibration = False
         menu.run()
+        main_screen()
 
     addon = addons.read_addon_descriptor(e)
     if addon:
