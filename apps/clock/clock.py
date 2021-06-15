@@ -4,6 +4,7 @@ import time
 import rtc
 import adafruit_il0373
 import displayio
+import tasko
 from arambadge import badge
 from adafruit_display_shapes.rect import Rect
 
@@ -71,7 +72,7 @@ class ClockApp:
             return True
         return False
 
-    def run(self):
+    async def run(self):
         display = badge.display
         self.running = True
 
@@ -81,7 +82,7 @@ class ClockApp:
             group.append(self.draw_time(self.rtc.datetime, 48, 40))
             display.show(group)
             while display.time_to_refresh > 0:
-                pass
+                await tasko.sleep(display.time_to_refresh)
             if not self.process_input():
                 display.refresh()
 

@@ -6,6 +6,7 @@ from adafruit_display_text import label
 from adafruit_display_shapes.rect import Rect
 import board
 from digitalio import DigitalInOut
+import tasko
 
 # Radio icon from https://icons8.com/icon/9643/radio
 
@@ -56,14 +57,14 @@ class RadioApp:
             return True
         return False
 
-    def run(self):
+    async def run(self):
         display = badge.display
         self.running = True
 
         while self.running:
             self.render()
             while display.time_to_refresh > 0:
-                pass
+                await tasko.sleep(display.time_to_refresh)
             if not self.process_input():
                 display.refresh()
 

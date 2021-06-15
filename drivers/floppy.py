@@ -70,7 +70,9 @@ def create_eeprom(addon):
     eeprom_addr, eeprom_size, page_size = read_config(addon)
     return EEPROM(badge.i2c, eeprom_addr=eeprom_addr, eeprom_size=eeprom_size, page_size=page_size)
 
-def main(addon):
+async def main(addon):
+    # TODO (async feature): understand what can we 'await' here!
+    #                       maybe just sleep between file reads?
     try:
         storage.umount('/floppy')
     except:
