@@ -13,7 +13,7 @@ class RadioApp:
     def __init__(self):
         self.fm = SI4703(badge.i2c, DigitalInOut(board.D2), channel=103)
         self.fm.reset()
-        self.fm.volume = 7
+        self.fm.volume = 1
 
     def render(self):
         screen = displayio.Group()
