@@ -3,6 +3,7 @@
 #
 # Copyright (c) 2020, Uri Shaked
 
+import addons
 from arambadge import badge
 from eeprom import EEPROM
 from eepromvfs import mount_eeprom
@@ -70,11 +71,21 @@ def create_eeprom(addon):
     eeprom_addr, eeprom_size, page_size = read_config(addon)
     return EEPROM(badge.i2c, eeprom_addr=eeprom_addr, eeprom_size=eeprom_size, page_size=page_size)
 
-def main(addon):
+def umountfloppy():
     try:
         storage.umount('/floppy')
     except:
         pass
+
+def mountfloppy():
+    e = EEPROM(badge.i2c)
+    addon = addons.read_addon_descriptor(e)
+    eeprom = create_eeprom(addon)
+    fs = mount_eeprom(eeprom, "/floppy")
+    return fs
+
+def main(addon):
+    umountfloppy()
     print("Floppy disk driver v1.0")
     eeprom = create_eeprom(addon)
     fs = mount_eeprom(eeprom, "/floppy")
