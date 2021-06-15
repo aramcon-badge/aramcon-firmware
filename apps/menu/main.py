@@ -102,14 +102,6 @@ class MenuApp:
             while badge.gamepad.get_pressed() & badge.BTN_DOWN:
                 pass
         elif buttons & badge.BTN_RIGHT:
-            self.selection = (self.selection + num_apps - 3) % num_apps
-            while badge.gamepad.get_pressed() & badge.BTN_RIGHT:
-                pass
-        elif buttons & badge.BTN_LEFT:
-            self.selection = (self.selection + num_apps - 3) % num_apps
-            while badge.gamepad.get_pressed() & badge.BTN_LEFT:
-                pass
-        elif buttons & badge.BTN_ACTION:
             badge.vibration = True
             # Wait until the action button is released
             while badge.gamepad.get_pressed() & badge.BTN_ACTION:
@@ -117,6 +109,17 @@ class MenuApp:
             time.sleep(0.1)
             badge.vibration = False
             run_app(self.apps[self.selection])
+        elif buttons & badge.BTN_LEFT:
+            self.selection = (self.selection + 3) % num_apps
+            while badge.gamepad.get_pressed() & badge.BTN_LEFT:
+                pass
+        elif buttons & badge.BTN_ACTION:
+            badge.vibration = True
+            while badge.gamepad.get_pressed() & badge.BTN_ACTION:
+                pass
+            time.sleep(0.1)
+            badge.vibration = False
+            self.stop()
         else:
             return False
         return True
