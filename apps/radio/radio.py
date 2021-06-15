@@ -60,11 +60,16 @@ class RadioApp:
         display = badge.display
         self.running = True
 
+        self.render()
+        while display.time_to_refresh > 0:
+            pass
+        display.refresh()
+
         while self.running:
-            self.render()
-            while display.time_to_refresh > 0:
-                pass
-            if not self.process_input():
+            if self.process_input():
+                self.render()
+                while display.time_to_refresh > 0:
+                    pass
                 display.refresh()
 
 def main():
