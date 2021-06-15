@@ -1,22 +1,32 @@
-Day 1:
-9:00  Start, Krakowsky
-9:30  First talk
-10:00 Caviar snacks
-10:30 Golf workshop
-11:00 Code golf workshop
-11:30 Morning nap
-12:00 Launch
-13:00 Great talk
-13:30 Amazing talk, mystery speaker
-14:00 Moon shuttle leaves
-19:00 Headphone Party
-Day 2:
-9:00  Sponsor talk (Mano Sapanut)
-9:30  The best talk ever
-10:00 Late breakfast
-10:30 Badge eating contest
-11:00 Dragon fight
-11:30 Morning nap
-12:00 DiY Launch
-13:00 Closing ceremony
-14:00 Ethical packing
+----- First Day -----
+11:00 - 12:00 Opening Ceremony
+12:00 - 13:00 Lunch Break
+13:00 - 13:55 [Track A] Gil Dabah | Smash The Ref - win32k design flaw leads to lots of security bugs
+13:00 - 13:55 [Track B] Nadav Claude Cohen | 7 bugs in your brain and how they are losing you money
+14:15 - 14:55 [Track A] Oded Ben Dov | Deep Learning DNA
+14:15 - 14:55 [Track B] Guy Yoshpe | A case of stolen laptop
+15:00 - 15:40 [Track A] Aviv Revach | Reverse engineer your self
+15:00 - 15:55 [Track B] Michel Heily | Gameboy advance emulation and funny bugs
+16:00 - 16:55 [Track A] Nir Krakowski | Failing fast - 100 Startups in 1 Year
+16:00 - 16:55 [Track B] Omer Rosenbaum | Continuous Documentation - a continuous story of an early-stage startup
+17:00 - 17:40 [Track A] Amir Shaked | Managing Growth Pains
+17:00 - 17:40 [Track B] Tamir Berliner | Deep dive into the AR / VR technosphere
+18:00 - 18:55 [Track A] Danny Grander | The story of Snyk
+18:00 - 18:55 [Track B] Gil Kaminker | Evolution of Android Mobile Forensics
+19:00 - 21:00 Dinner + Free Time
+21:00 - ??:?? Krakowski Presents: Party Time!
+----- Second Day -----
+08:30 - 10:00 Room Checkout + Breakfast
+10:00 - 10:55 [Track A] Lior Yaari | VC Internals
+10:00 - 10:55 [Track B] Yonatan Goldschmidt | Using Python in the Linux Kernel
+11:15 - 12:10 [Track A] Dan Shechter | Core Wars in the Global Financial System
+11:15 - 12:10 [Track B] Dan Aloni | Rust - An introduction for C/C++ programmers
+12:15 - 13:15 Lunch Break
+13:15 - 14:10 [Track A] Elad Raz | Introduction to semiconductors and compute architecture
+13:15 - 14:10 [Track B] Uri Yacovy | Doing business with businesses - Effective B2B
+14:30 - 15:55 [Track A] ARAM Ethics Talk + Panel
+14:30 - 15:25 [Track B] Tomer Nussbaum | Intro to the Universe
+15:45 - 16:40 [Track B] Oded Margalit | The Great Margalit-athon
+16:15 - 17:40 [Track A] Unicorn Founders' Panel
+17:00 - 18:25 [Track B] Ilan Godik | Understanding Investing & ETF Internals
+18:30 - 19:00 Closing Ceremony
