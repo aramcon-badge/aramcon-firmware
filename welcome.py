@@ -5,6 +5,7 @@ from arambadge import badge
 
 def show_welcome():
     display = badge.display
+
     frame = displayio.Group()
 
     pic = displayio.OnDiskBitmap(open("assets/welcome.bmp", "rb"))
