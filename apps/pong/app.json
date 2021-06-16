@@ -1,0 +1,5 @@
+{
+"menu_item": "Pong",
+"author": "Amit Sides",
+"main": "pong.py"
+}
