@@ -21,6 +21,7 @@ class NameService(Service):
     uuid = StandardUUID(0xfeef)
 
     def __init__(self):
+        NameService._disp_rx = StreamIn(uuid=StandardUUID(0xfeee), timeout=1.0, buffer_size=8192)
         super().__init__()
         self._bitmap = displayio.Bitmap(badge.display.width, badge.display.height, 2)
         self._palette = displayio.Palette(2)
@@ -29,12 +30,8 @@ class NameService(Service):
         self._offset = 0
         self._bufsize = 0
         self._ledstate = False
-        self._disp_rx = None
      
     def update(self):
-        if self._disp_rx is None:
-            self._disp_rx = StreamIn(uuid=StandardUUID(0xfeee), timeout=1.0, buffer_size=8192)
-
         while self._disp_rx.in_waiting > 0:
             if self._bufsize == 0:
                 value = int.from_bytes(self._disp_rx.read(1), 'little')
