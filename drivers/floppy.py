@@ -103,5 +103,7 @@ def main(addon):
             supervisor.disable_autoreload()
             try:
                 __import__('/floppy/main')
+            except Exception as err:
+                print("Floppy error: {}".format(err))
             finally:
                 supervisor.enable_autoreload()

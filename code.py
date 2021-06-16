@@ -65,5 +65,6 @@ while True:
             finally:
                 if had_error:
                     supervisor.reload()
+                main_screen()
     else:
         last_addon = None
