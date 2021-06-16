@@ -6,3 +6,4 @@ adafruit_ble==8.0.0
 adafruit_display_text==2.18.3
 adafruit_display_shapes==2.0.8
 adafruit_progressbar
+adafruit_si4713==1.2.6

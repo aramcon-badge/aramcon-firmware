@@ -1,0 +1,5 @@
+{
+"menu_item": "FM Transmitter",
+"author": "Pavel Ferencz",
+"main": "rtx.py"
+}
