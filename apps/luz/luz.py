@@ -1,4 +1,5 @@
 from arambadge import badge
+from debounce import wait_for_button_release
 import displayio
 import terminalio
 from adafruit_display_text import bitmap_label
@@ -94,10 +95,6 @@ class LuzApp:
             return True
         return False
 
-    def wait_for_button_release(self):
-        while badge.gamepad.get_pressed():
-            pass
-
     def run(self):
         display = badge.display
         self.running = True
@@ -119,7 +116,7 @@ class LuzApp:
             display.refresh()
 
             if self.process_input():
-                self.wait_for_button_release()
+                wait_for_button_release()
 
 
 def main():

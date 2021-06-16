@@ -1,3 +1,4 @@
+from debounce import wait_for_button_release
 import os
 import json
 import displayio
@@ -140,6 +141,7 @@ class MenuApp:
         self.running = True
         while self.running:
             if self.process_input():
+                wait_for_button_release()
                 self.render()
                 while badge.display.time_to_refresh > 0:
                     pass

@@ -1,4 +1,5 @@
 from arambadge import badge
+from debounce import wait_for_button_release
 from si4703 import SI4703
 import displayio
 import terminalio
@@ -11,9 +12,12 @@ from digitalio import DigitalInOut
 
 class RadioApp:
     def __init__(self):
-        self.fm = SI4703(badge.i2c, DigitalInOut(board.D2), channel=103)
-        self.fm.reset()
-        self.fm.volume = 7
+        try:
+            self.fm = SI4703(badge.i2c, DigitalInOut(board.D2), channel=103)
+            self.fm.reset()
+            self.fm.volume = 7
+        except Exception:
+            self.fm = None
 
     def render(self):
         screen = displayio.Group()
@@ -39,18 +43,21 @@ class RadioApp:
 
     def process_input(self):
         buttons = badge.gamepad.get_pressed() 
-        if buttons & badge.BTN_LEFT:
-            self.fm.channel -= 1
-            return True
-        if buttons & badge.BTN_RIGHT:
-            self.fm.channel += 1
-            return True
-        if buttons & badge.BTN_UP:
-            self.fm.volume += 1
-            return True
-        if buttons & badge.BTN_DOWN:
-            self.fm.volume -= 1
-            return True
+        if self.fm is not None:
+            self.fm.channel = round(self.fm.channel, 1)
+            if buttons & badge.BTN_LEFT:
+                self.fm.channel -= 0.1
+                return True
+            if buttons & badge.BTN_RIGHT:
+                self.fm.channel += 0.1
+                return True
+            if buttons & badge.BTN_UP:
+                self.fm.volume += 1
+                return True
+            if buttons & badge.BTN_DOWN:
+                self.fm.volume -= 1
+                return True
+            self.fm.channel = round(self.fm.channel, 1)
         if buttons & badge.BTN_ACTION:
             self.running = False
             return True
@@ -67,6 +74,7 @@ class RadioApp:
 
         while self.running:
             if self.process_input():
+                wait_for_button_release()
                 self.render()
                 while display.time_to_refresh > 0:
                     pass
