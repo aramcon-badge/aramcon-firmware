@@ -50,24 +50,28 @@ class RadioApp:
 
     def process_input(self):
         buttons = badge.gamepad.get_pressed() 
-        wait_for_button_release()
         if self.fm is not None:
             self.fm.channel = round(self.fm.channel, 1)
             if buttons & badge.BTN_LEFT:
                 self.fm.channel -= 0.1
+                wait_for_button_release()
                 return True
             if buttons & badge.BTN_RIGHT:
                 self.fm.channel += 0.1
+                wait_for_button_release()
                 return True
             if buttons & badge.BTN_UP:
                 self.fm.volume += 1
+                wait_for_button_release()
                 return True
             if buttons & badge.BTN_DOWN:
                 self.fm.volume -= 1
+                wait_for_button_release()
                 return True
             self.fm.channel = round(self.fm.channel, 1)
         if buttons & badge.BTN_ACTION:
             self.running = False
+            wait_for_button_release()
             return True
         return False
 

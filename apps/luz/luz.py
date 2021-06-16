@@ -76,23 +76,27 @@ class LuzApp:
 
     def process_input(self):
         buttons = badge.gamepad.get_pressed() 
-        wait_for_button_release()
         if buttons & badge.BTN_UP:
             self.update_next_screen(self.screen - 1)
+            wait_for_button_release()
             return True
         if buttons & badge.BTN_DOWN:
             self.update_next_screen(self.screen + 1)
+            wait_for_button_release()
             return True
         if buttons & badge.BTN_RIGHT:
             self.update_next_agenda(self.current_agenda + 1)
             self.update_next_screen(0)
+            wait_for_button_release()
             return True
         if buttons & badge.BTN_LEFT:
             self.update_next_agenda(self.current_agenda - 1)
             self.update_next_screen(0)
+            wait_for_button_release()
             return True
         if buttons & badge.BTN_ACTION:
             self.running = False
+            wait_for_button_release()
             return True
         return False
 
@@ -110,11 +114,10 @@ class LuzApp:
                 self.current_agenda = self.next_agenda
                 self.screen = self.next_screen
                 self.render()
-            
-            while display.time_to_refresh > 0:
-                pass
 
-            display.refresh()
+                while display.time_to_refresh > 0:
+                    pass
+                display.refresh()
 
             self.process_input()
 
