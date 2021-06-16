@@ -1,5 +1,9 @@
-# AramCON 2 Badge Main Firmware
+# ARAMCON 2 Badge Main Firmware
 from arambadge import badge
+
+# Before going on, give the user some indication we're starting...
+badge.pixels.fill((0, 0, 10))
+
 from eeprom import EEPROM
 import addons
 import time
@@ -7,7 +11,9 @@ import supervisor
 from welcome import show_welcome
 from apps.menu.main import MenuApp
 
-print("AramCON 2 Badge Firmware")
+# Extra start-up indication for the user
+badge.vibration = True
+print("ARAMCON 2 Badge Firmware")
 
 def i2c_device_available(i2c, addr):
     if i2c.try_lock():
@@ -33,6 +39,8 @@ menu = MenuApp()
 main_screen()
 
 last_addon = None
+badge.vibration = False
+badge.pixels.fill(0)
 while True:
     buttons = badge.gamepad.get_pressed()
     if buttons:
