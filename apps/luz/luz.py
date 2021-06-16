@@ -76,6 +76,7 @@ class LuzApp:
 
     def process_input(self):
         buttons = badge.gamepad.get_pressed() 
+        wait_for_button_release()
         if buttons & badge.BTN_UP:
             self.update_next_screen(self.screen - 1)
             return True
@@ -115,8 +116,7 @@ class LuzApp:
 
             display.refresh()
 
-            if self.process_input():
-                wait_for_button_release()
+            self.process_input()
 
 
 def main():
