@@ -1,0 +1,37 @@
+----- First Day -----
+11:00 Opening Ceremony
+12:00 Lunch Break
+13:00 [A] Gil Dabah
+   Smash The Ref - win32k design flaw
+   leads to lots of security bugs
+13:00 [B] Nadav Claude Cohen
+   7 bugs in your brain and how they
+   are losing you money
+14:15 [A] Oded Ben Dov
+   Deep Learning DNA
+14:15 [B] Guy Yoshpe
+   A case of stolen laptop
+15:00 [A] Aviv Revach
+   Reverse engineer your self
+15:00 [B] Michel Heily
+   Gameboy advance emulation and
+   funny bugs
+16:00 [A] Nir Krakowski
+   Failing fast-100 Startups in 1 Year
+16:00 [B] Omer Rosenbaum
+   Continuous Documentation - a
+   continuous story of an early-stage
+   startup
+17:00 [A] Amir Shaked
+   Managing Growth Pains
+17:00 [B] Tamir Berliner
+   Deep dive into the AR / VR
+   technosphere
+18:00 [A] Danny Grander
+   The story of Snyk
+18:00 [B] Gil Kaminker
+   Evolution of Android Mobile
+   Forensics
+19:00 Dinner + Free Time
+21:00 Krakowski Presents:
+   Party Time!
