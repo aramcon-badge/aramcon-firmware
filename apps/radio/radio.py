@@ -16,7 +16,8 @@ class RadioApp:
             self.fm = SI4703(badge.i2c, DigitalInOut(board.D2), channel=103)
             self.fm.reset()
             self.fm.volume = 7
-        except Exception:
+        except:
+            print('Missing FM module')
             self.fm = None
 
     def render(self):
@@ -31,18 +32,25 @@ class RadioApp:
         app_label_group = displayio.Group(scale=2, x=40, y=14)
         app_label_group.append(app_label)
         screen.append(app_label_group)
-        
-        volume_label = label.Label(terminalio.FONT, text="Volume: {}".format(self.fm.volume), color=0xffffff)
-        channel_label = label.Label(terminalio.FONT, text="Station: {} FM".format(self.fm.channel), color=0xffffff, y=16)
+
         controls_group = displayio.Group(scale=2, x=8, y=48)
-        controls_group.append(volume_label)
-        controls_group.append(channel_label)
+        
+        if self.fm is not None:
+            volume_label = label.Label(terminalio.FONT, text="Volume: {}".format(self.fm.volume), color=0xffffff)
+            channel_label = label.Label(terminalio.FONT, text="Station: {} FM".format(self.fm.channel), color=0xffffff, y=16)
+            controls_group.append(volume_label)
+            controls_group.append(channel_label)
+        else:
+            missing_module_label = label.Label(terminalio.FONT, text="FM module missing\n or not working", color=0xffffff)
+            controls_group.append(missing_module_label)
+
         screen.append(controls_group)
 
         badge.display.show(screen)
 
     def process_input(self):
         buttons = badge.gamepad.get_pressed() 
+        wait_for_button_release()
         if self.fm is not None:
             self.fm.channel = round(self.fm.channel, 1)
             if buttons & badge.BTN_LEFT:
@@ -74,7 +82,6 @@ class RadioApp:
 
         while self.running:
             if self.process_input():
-                wait_for_button_release()
                 self.render()
                 while display.time_to_refresh > 0:
                     pass
