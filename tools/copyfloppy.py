@@ -1,4 +1,3 @@
-import addons
 import os
 import displayio
 import terminalio
