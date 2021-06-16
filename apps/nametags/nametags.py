@@ -14,11 +14,11 @@ from apps.nametags import ui
 class NametagsApp:
     def __init__(self, init_ui = True):
         self.ble = BLERadio()
+        ui.display_qr(self.addr_suffix)
         self.nameservice = NameService()
         self.advertisement = ProvideServicesAdvertisement(self.nameservice)
         self.scan_response = Advertisement()
         self.scan_response.complete_name = "BADGE-{}".format(self.addr_suffix)
-        ui.display_qr(self.addr_suffix)
         self.ble.start_advertising(self.advertisement, self.scan_response)
 
     @property

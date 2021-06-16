@@ -19,9 +19,9 @@ import storage
 
 class NameService(Service):
     uuid = StandardUUID(0xfeef)
+    _disp_rx = StreamIn(uuid=StandardUUID(0xfeee), timeout=1.0, buffer_size=8192)
 
     def __init__(self):
-        NameService._disp_rx = StreamIn(uuid=StandardUUID(0xfeee), timeout=1.0, buffer_size=8192)
         super().__init__()
         self._bitmap = displayio.Bitmap(badge.display.width, badge.display.height, 2)
         self._palette = displayio.Palette(2)
