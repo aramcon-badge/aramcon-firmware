@@ -1,0 +1,29 @@
+----- Second Day -----
+08:30 Room Checkout + Breakfast
+10:00 [A] Lior Yaari
+   VC Internals
+10:00 [B] Yonatan Goldschmidt
+   Using Python in the Linux Kernel
+11:15 [A] Dan Shechter
+   Core Wars in the Global
+   Financial System
+11:15 [B] Dan Aloni
+   Rust - An introduction for
+   C/C++ programmers
+12:15 Lunch Break
+13:15 [A] Elad Raz
+   Introduction to semiconductors
+   and compute architecture
+13:15 [B] Uri Yacovy
+   Doing business with businesses
+   - Effective B2B
+14:30 [A] ARAM Ethics Talk + Panel
+14:30 [B] Tomer Nussbaum
+   Intro to the Universe
+15:45 [B] Oded Margalit
+   The Great Margalit-athon
+16:15 [A] Unicorn Founders' Panel
+17:00 [B] Ilan Godik
+   Understanding Investing
+   & ETF Internals
+18:30 Closing Ceremony
