@@ -10,6 +10,7 @@ from eepromvfs import mount_eeprom
 import os
 import storage
 import struct
+import supervisor
 
 # Floppy Add-on data binary format:
 #
@@ -99,4 +100,8 @@ def main(addon):
         print("Floppy ready!")
     else:
         if isfile('/floppy/main.py'):
-            __import__('/floppy/main')
+            supervisor.disable_autoreload()
+            try:
+                __import__('/floppy/main')
+            finally:
+                supervisor.enable_autoreload()
