@@ -33,6 +33,8 @@ class App:
             self.update()
 
     def cleanup(self):
+        badge.pixels[0] = (0, 0, 0)
+        badge.pixels[1] = (0, 0, 0)
         self.ble.stop_advertising()
         self.running = False
 
