@@ -1,11 +1,11 @@
 from adafruit_ble.uuid import StandardUUID
-from adafruit_ble.services import Service
 from adafruit_ble.characteristics.stream import StreamIn
 from arambadge import badge
 import displayio
+import adafruit_ble.services
 import time
 
-class ScratchPadService(Service):
+class Service(adafruit_ble.services.Service):
     uuid = StandardUUID(0xfeee)
     _disp_rx = StreamIn(uuid=StandardUUID(0xfeee), timeout=1.0, buffer_size=100)
 

@@ -6,15 +6,15 @@ from adafruit_ble.advertising import Advertisement
 from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
 from arambadge import badge
 
-from apps.scratchpad.ble_service import ScratchPadService
+from apps.lights.ble_service import Service
 
-class ScratchPadApp:
+class App:
     def __init__(self, init_ui = True):
         self.ble = BLERadio()
-        self.service = ScratchPadService()
+        self.service = Service()
         self.advertisement = ProvideServicesAdvertisement(self.service)
         self.scan_response = Advertisement()
-        self.scan_response.complete_name = "SCRATCHPAD-LIOR"
+        self.scan_response.complete_name = "LIGHTS-SERVER"
         self.ble.start_advertising(self.advertisement, self.scan_response)
 
     def update(self):
@@ -39,4 +39,4 @@ class ScratchPadApp:
         self.running = False
 
 def main():
-    return ScratchPadApp()
+    return App()

@@ -1,5 +1,5 @@
 {
 "menu_item": "Lights",
 "author": "Lior Stern",
-"main": "scratchpad.py"
+"main": "lights.py"
 }
