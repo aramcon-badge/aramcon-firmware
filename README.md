@@ -1,6 +1,6 @@
 # ARAMCON 2 Badge Firmware
 
-The main firmware code for the ARAMCON 2 Badge. For documentation, see [https://badge.a-combinator.com](the Badge's doc site).
+The main firmware code for the ARAMCON 2 Badge. For documentation, see [the Badge's doc site](https://badge.a-combinator.com).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
