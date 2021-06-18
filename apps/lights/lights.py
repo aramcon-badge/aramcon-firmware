@@ -10,7 +10,7 @@ from adafruit_display_text import bitmap_label
 from apps.lights.ble_service import Service
 
 class App:
-    def __init__(self, init_ui = True):
+    def __init__(self):
         self.ble = BLERadio()
         self.service = Service()
         self.advertisement = ProvideServicesAdvertisement(self.service)
