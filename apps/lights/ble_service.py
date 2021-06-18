@@ -6,7 +6,7 @@ import time
 
 class Service(adafruit_ble.services.Service):
     uuid = StandardUUID(0xfeee)
-    _disp_rx = StreamIn(uuid=StandardUUID(0xfeee), timeout=1.0, buffer_size=100)
+    _disp_rx = StreamIn(uuid=uuid, timeout=1.0, buffer_size=100)
 
     def __init__(self):
         super().__init__()
