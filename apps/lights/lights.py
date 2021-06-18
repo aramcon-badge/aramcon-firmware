@@ -1,7 +1,5 @@
-import random
 import time
 from adafruit_ble import BLERadio
-from adafruit_ble.services.nordic import UARTService
 from adafruit_ble.advertising import Advertisement
 from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
 from arambadge import badge

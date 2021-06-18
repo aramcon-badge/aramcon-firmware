@@ -1,7 +1,6 @@
 from adafruit_ble.uuid import StandardUUID
 from adafruit_ble.characteristics.stream import StreamIn
 from arambadge import badge
-import displayio
 import adafruit_ble.services
 import time
 
