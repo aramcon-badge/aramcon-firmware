@@ -18,8 +18,8 @@ import supervisor
 # ------ ----     -----------
 # 0      byte     Flags. Reserved and must be 0
 # 1      byte     EEPROM address. Usually 0x51
-# 3      byte     EEPROM memory size exponent (e.g. 16 for 64kbit)
-# 2      byte     EEPROM page size exponent (e.g. 7 for 128 bytes)
+# 2      byte     EEPROM memory size exponent (e.g. 16 for 64kbit)
+# 3      byte     EEPROM page size exponent (e.g. 7 for 128 bytes)
 #
 # If the data is not present we assume 32kbit EEPROM at 0x51 with 64-byte pages.
 # 
