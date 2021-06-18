@@ -2,6 +2,8 @@
 
 The main firmware code for the ARAMCON 2 Badge. For documentation, see [https://badge.a-combinator.com](the Badge's doc site).
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Installation
 
 1. Copy the content of this folder to your badge drive. You can skip the `.git` directory.
