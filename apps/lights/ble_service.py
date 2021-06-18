@@ -10,14 +10,14 @@ class Service(adafruit_ble.services.Service):
 
     def __init__(self):
         super().__init__()
-        self._buffer = []
 
     def update(self):
+        buffer = []
         while self._disp_rx.in_waiting > 0:
             byte = int.from_bytes(self._disp_rx.read(1), 'little')
-            self._buffer.append(byte)
-            if len(self._buffer) == 6:
-                badge.pixels[0] = tuple(self._buffer[0:3])
-                badge.pixels[1] = tuple(self._buffer[3:6])
-                self._buffer = []
+            buffer.append(byte)
+            if len(buffer) == 6:
+                badge.pixels[0] = tuple(buffer[0:3])
+                badge.pixels[1] = tuple(buffer[3:6])
+                buffer = []
                 time.sleep(1)
