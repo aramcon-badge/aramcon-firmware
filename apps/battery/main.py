@@ -14,16 +14,24 @@ class App:
 
     @staticmethod
     def render_battery_status(voltage: float):
-        message = f"BATTERY - voltage {voltage}V"
+        message = f"BATTERY\nVOLTAGE {voltage}V\nPERCENTAGE: unknown\nCHARGING: unknown"
         print(message)
         screen = displayio.Group()
-        label = adafruit_display_text.bitmap_label.Label(
-            terminalio.FONT,
-            text=message,
-            color=0xffffff,
+        label_group = displayio.Group(
+            scale=2,
+            x=10,
+            y=10
         )
-        label_group = displayio.Group(scale=2, x=10, y=10)
-        label_group.append(label)
+
+        for (i, line) in enumerate(message.splitlines()):
+            label = adafruit_display_text.bitmap_label.Label(
+                terminalio.FONT,
+                text=line,
+                color=0xffffff,
+                y=(i * 12),
+            )
+            label_group.append(label)
+
         screen.append(label_group)
         arambadge.badge.display.show(screen)
 
