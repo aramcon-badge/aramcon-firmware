@@ -1,0 +1,5 @@
+{
+"menu_item": "Keyboard",
+"author": "Uri Shaked",
+"main": "keyboard.py"
+}
