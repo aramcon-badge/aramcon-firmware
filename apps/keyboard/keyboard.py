@@ -1,5 +1,4 @@
 from arambadge import badge
-from debounce import wait_for_button_release
 import bbkbd
 import displayio
 import terminalio
@@ -47,10 +46,8 @@ class KeyboardApp:
                 else:
                     self.text += key
                 key = self.keyboard.read()
-        buttons = badge.gamepad.get_pressed() 
-        if buttons & badge.BTN_ACTION:
+        if badge.action:
             self.running = False
-            wait_for_button_release()
             return True
         
         return False

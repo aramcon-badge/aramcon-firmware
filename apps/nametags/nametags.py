@@ -32,8 +32,7 @@ class NametagsApp:
         ui.display_qr(self.addr_suffix)
     
     def process_input(self):
-        buttons = badge.gamepad.get_pressed() 
-        if buttons & badge.BTN_ACTION:
+        if badge.action:
             self.cleanup()
             return True
         return False

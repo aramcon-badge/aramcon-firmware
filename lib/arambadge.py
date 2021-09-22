@@ -8,6 +8,48 @@ from analogio import AnalogIn
 import displayio
 import neopixel
 import display
+import keypad
+
+class KeyStates:
+    """Convert `keypad.Event` information from the given `keypad` scanner into key-pressed state.
+    :param scanner: a `keypad` scanner, such as `keypad.Keys`
+    """
+
+    def __init__(self, scanner):
+        self._scanner = scanner
+        self._pressed = [False] * self._scanner.key_count
+        self.update()
+
+    def update(self):
+        """Update key information based on pending scanner events."""
+
+        # If the event queue overflowed, discard any pending events,
+        # and assume all keys are now released.
+        if self._scanner.events.overflowed:
+            self._scanner.events.clear()
+            self._scanner.reset()
+            self._pressed = [False] * self._scanner.key_count
+
+        self._was_pressed = self._pressed.copy()
+
+        while True:
+            event = self._scanner.events.get()
+            if not event:
+                # Event queue is now empty.
+                break
+            self._pressed[event.key_number] = event.pressed
+            if event.pressed:
+                self._was_pressed[event.key_number] = True
+
+    def was_pressed(self, key_number):
+        """True if key was down at any time since the last `update()`,
+        even if it was later released.
+        """
+        return self._was_pressed[key_number]
+
+    def pressed(self, key_number):
+        """True if key is currently pressed, as of the last `update()`."""
+        return self._pressed[key_number]
 
 class Badge:
     BTN_UP = 1 << 0
@@ -17,16 +59,6 @@ class Badge:
     BTN_ACTION = 1 << 4
 
     def __init__(self):
-        self._up = DigitalInOut(board.UP_BUTTON)
-        self._up.switch_to_input(pull=Pull.UP)
-        self._down = DigitalInOut(board.DOWN_BUTTON)
-        self._down.switch_to_input(pull=Pull.UP)
-        self._left = DigitalInOut(board.LEFT_BUTTON)
-        self._left.switch_to_input(pull=Pull.UP)
-        self._right = DigitalInOut(board.RIGHT_BUTTON)
-        self._right.switch_to_input(pull=Pull.UP)
-        self._action = DigitalInOut(board.ACTION_BUTTON)
-        self._action.switch_to_input(pull=Pull.UP)
         self._battery = AnalogIn(board.BATTERY_SENSE)
         self._led = DigitalInOut(board.LED)
         self._led.switch_to_output(value=True)
@@ -40,41 +72,55 @@ class Badge:
         self._display = None
         self._sound = None
         self._midi = None
-        self._gamepad = None
+        self._button_pins = [
+            board.UP_BUTTON,
+            board.DOWN_BUTTON,
+            board.LEFT_BUTTON,
+            board.RIGHT_BUTTON,
+            board.ACTION_BUTTON]
+        self._keypad = None
+        self._buttons = None
 
     @property
     def up(self):
         """``True`` when the up button is pressed. ``False`` if not."""
-        return not self._up.value
+        self.buttons.update()
+        return self.buttons.pressed(self._button_pins.index(board.UP_BUTTON))
 
     @property
     def down(self):
         """``True`` when the down button is pressed. ``False`` if not."""
-        return not self._down.value
+        self.buttons.update()
+        return self.buttons.pressed(self._button_pins.index(board.DOWN_BUTTON))
 
     @property
     def left(self):
         """``True`` when the left button is pressed. ``False`` if not."""
-        return not self._left.value
+        self.buttons.update()
+        return self.buttons.pressed(self._button_pins.index(board.LEFT_BUTTON))
 
     @property
     def right(self):
         """``True`` when the right button is pressed. ``False`` if not."""
-        return not self._right.value
+        self.buttons.update()
+        return self.buttons.pressed(self._button_pins.index(board.RIGHT_BUTTON))
     
     @property
     def action(self):
         """``True`` when the action button is pressed. ``False`` if not."""
-        return not self._action.value
+        self.buttons.update()
+        return self.buttons.pressed(self._button_pins.index(board.ACTION_BUTTON))
 
     @property
-    def gamepad(self):
-        if not self._gamepad:
-            import gamepad
-            self._gamepad = gamepad.GamePad(
-                self._up, self._left, self._down, self._right, self._action
+    def buttons(self):
+        if not self._keypad:
+            self._keypad = keypad.Keys(
+                self._button_pins,
+                value_when_pressed=False,
+                pull=True
             )
-        return self._gamepad
+            self._buttons = KeyStates(self._keypad)
+        return self._buttons
     
     @property
     def back_led(self):
@@ -159,8 +205,8 @@ class Badge:
     def show_bitmap(self, path, pixel_shader=displayio.ColorConverter()):
         """Draws the bitmap from the given file. Must be in .bmp format"""
         image = displayio.OnDiskBitmap(open(path, "rb"))
-        grid = displayio.TileGrid(image, pixel_shader=pixel_shader)
-        group = displayio.Group(max_size=1)
+        grid = displayio.TileGrid(image, pixel_shader=image.pixel_shader)
+        group = displayio.Group()
         group.append(grid)
         self.display.show(group)
         while self.display.time_to_refresh > 0:

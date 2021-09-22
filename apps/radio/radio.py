@@ -1,5 +1,4 @@
 from arambadge import badge
-from debounce import wait_for_button_release
 from si4703 import SI4703
 import displayio
 import terminalio
@@ -49,29 +48,23 @@ class RadioApp:
         badge.display.show(screen)
 
     def process_input(self):
-        buttons = badge.gamepad.get_pressed() 
         if self.fm is not None:
             self.fm.channel = round(self.fm.channel, 1)
-            if buttons & badge.BTN_LEFT:
+            if badge.left:
                 self.fm.channel -= 0.1
-                wait_for_button_release()
                 return True
-            if buttons & badge.BTN_RIGHT:
+            if badge.right:
                 self.fm.channel += 0.1
-                wait_for_button_release()
                 return True
-            if buttons & badge.BTN_UP:
+            if badge.up:
                 self.fm.volume += 1
-                wait_for_button_release()
                 return True
-            if buttons & badge.BTN_DOWN:
+            if badge.down:
                 self.fm.volume -= 1
-                wait_for_button_release()
                 return True
             self.fm.channel = round(self.fm.channel, 1)
-        if buttons & badge.BTN_ACTION:
+        if badge.action:
             self.running = False
-            wait_for_button_release()
             return True
         return False
 

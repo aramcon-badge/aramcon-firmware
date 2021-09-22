@@ -1,4 +1,3 @@
-from debounce import wait_for_button_release
 import os
 import json
 import displayio
@@ -51,11 +50,11 @@ class MenuApp:
         font = terminalio.FONT
         apps_per_screen = 3
 
-        screen = displayio.Group(max_size=3 + apps_per_screen)
+        screen = displayio.Group()
         screen.append(Rect(0, 0, display.width, display.height, fill=0xffffff))
         
         banner_image = displayio.OnDiskBitmap(open("/assets/banner.bmp", "rb"))
-        banner = displayio.TileGrid(banner_image, pixel_shader=displayio.ColorConverter())
+        banner = displayio.TileGrid(banner_image, pixel_shader=banner_image.pixel_shader)
         screen.append(banner)
 
         first_app = (self.selection // apps_per_screen) * apps_per_screen
@@ -66,15 +65,13 @@ class MenuApp:
             y = 5 + (index % apps_per_screen) * 40
             app_group = displayio.Group(x=38, y=y)
             fill = 0
-            palette = displayio.Palette(1)
             if first_app + index == self.selection:
                 app_group.append(Rect(-5, -4, display.width - 32, 40, fill=0))
                 fill = 0xffffff
-                palette[0] = 0xffffff
             try:
                 app_icon_file = app.get('icon', "{}/icon.bmp".format(app.get('path', '')))
                 app_icon = displayio.OnDiskBitmap(open(app_icon_file, "rb"))
-                app_group.append(displayio.TileGrid(app_icon, pixel_shader=palette))
+                app_group.append(displayio.TileGrid(app_icon, pixel_shader=app_icon.pixel_shader))
             except:
                 pass
             app_label = label.Label(font, text=title, color=fill)
@@ -86,33 +83,27 @@ class MenuApp:
         if first_app + apps_per_screen < len(self.apps):
             # we have more app, display a down arrow
             more_icon = displayio.OnDiskBitmap(open("{}/arrow_down.bmp".format(MENU_ROOT), "rb"))
-            screen.append(displayio.TileGrid(more_icon, pixel_shader=displayio.ColorConverter(), x=display.width - 16, y=display.height - 7))
+            screen.append(displayio.TileGrid(more_icon, pixel_shader=more_icon.pixel_shader, x=display.width - 16, y=display.height - 7))
         
         # Show it
         display.show(screen)
 
     def process_input(self):
-        buttons = badge.gamepad.get_pressed() 
         num_apps = len(self.apps)
-        if buttons & badge.BTN_UP:
+        if badge.up:
             self.selection = (self.selection + num_apps - 1) % num_apps
-            wait_for_button_release()
-        elif buttons & badge.BTN_DOWN:
+        elif badge.down:
             self.selection = (self.selection + 1) % num_apps
-            wait_for_button_release()
-        elif buttons & badge.BTN_RIGHT:
+        elif badge.right:
             badge.vibration = True
             # Wait until the action button is released
-            wait_for_button_release()
             time.sleep(0.1)
             badge.vibration = False
             run_app(self.apps[self.selection])
-        elif buttons & badge.BTN_LEFT:
+        elif badge.left:
             self.selection = (self.selection + 3) % num_apps
-            wait_for_button_release()
-        elif buttons & badge.BTN_ACTION:
+        elif badge.action:
             badge.vibration = True
-            wait_for_button_release()
             time.sleep(0.1)
             badge.vibration = False
             self.stop()

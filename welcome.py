@@ -9,11 +9,11 @@ def show_welcome():
     frame = displayio.Group()
 
     pic = displayio.OnDiskBitmap(open("assets/welcome.bmp", "rb"))
-    grid = displayio.TileGrid(pic, pixel_shader=displayio.ColorConverter())
+    grid = displayio.TileGrid(pic, pixel_shader=pic.pixel_shader)
     frame.append(grid)
 
     pic = displayio.OnDiskBitmap(open("assets/banner.bmp", "rb"))
-    grid = displayio.TileGrid(pic, pixel_shader=displayio.ColorConverter())
+    grid = displayio.TileGrid(pic, pixel_shader=pic.pixel_shader)
     frame.append(grid)
 
     text_area = label.Label(terminalio.FONT, text="Welcome!", color=0x0, x=76, y=20)

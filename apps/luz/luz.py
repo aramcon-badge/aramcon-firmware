@@ -1,5 +1,4 @@
 from arambadge import badge
-from debounce import wait_for_button_release
 import displayio
 import terminalio
 from adafruit_display_text import bitmap_label
@@ -33,9 +32,7 @@ class LuzApp:
 
         screen.append(Rect(0, 32, display.width, display.height - 32, fill=0xffffff))
         banner_image = displayio.OnDiskBitmap(open("{}/icon.bmp".format(APP_ROOT), "rb"))
-        palette = displayio.Palette(1)
-        palette[0] = 0xffffff
-        banner = displayio.TileGrid(banner_image, pixel_shader=palette, x=4, y=0)
+        banner = displayio.TileGrid(banner_image, pixel_shader=banner_image.pixel_shader, x=4, y=0)
         screen.append(banner)
 
         app_label = bitmap_label.Label(terminalio.FONT, text="Conference Agenda", color=0xffffff, save_text=True)
@@ -52,10 +49,10 @@ class LuzApp:
         # Display up/down arrows as needed
         if self.screen > 0:
             more_icon = displayio.OnDiskBitmap(open("{}/arrow_up.bmp".format(APP_ROOT), "rb"))
-            screen.append(displayio.TileGrid(more_icon, pixel_shader=displayio.ColorConverter(), x=display.width - 20, y=40))
+            screen.append(displayio.TileGrid(more_icon, pixel_shader=more_icon.pixel_shader, x=display.width - 20, y=40))
         if self.screen + 1 < self.screen_count[self.current_agenda]:
             more_icon = displayio.OnDiskBitmap(open("{}/arrow_down.bmp".format(APP_ROOT), "rb"))
-            screen.append(displayio.TileGrid(more_icon, pixel_shader=displayio.ColorConverter(), x=display.width - 20, y=display.height - 16))
+            screen.append(displayio.TileGrid(more_icon, pixel_shader=more_icon.pixel_shader, x=display.width - 20, y=display.height - 16))
 
         display.show(screen)
     
@@ -75,28 +72,22 @@ class LuzApp:
             self.next_screen = 0
 
     def process_input(self):
-        buttons = badge.gamepad.get_pressed() 
-        if buttons & badge.BTN_UP:
+        if badge.up:
             self.update_next_screen(self.screen - 1)
-            wait_for_button_release()
             return True
-        if buttons & badge.BTN_DOWN:
+        if badge.down:
             self.update_next_screen(self.screen + 1)
-            wait_for_button_release()
             return True
-        if buttons & badge.BTN_RIGHT:
+        if badge.right:
             self.update_next_agenda(self.current_agenda + 1)
             self.update_next_screen(0)
-            wait_for_button_release()
             return True
-        if buttons & badge.BTN_LEFT:
+        if badge.left:
             self.update_next_agenda(self.current_agenda - 1)
             self.update_next_screen(0)
-            wait_for_button_release()
             return True
-        if buttons & badge.BTN_ACTION:
+        if badge.action:
             self.running = False
-            wait_for_button_release()
             return True
         return False
 

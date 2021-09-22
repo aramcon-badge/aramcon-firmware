@@ -23,20 +23,17 @@ class ClockApp:
 
     def draw_time(self, dt, x, y):
         timestr = '%02d:%02d' % (dt.tm_hour, dt.tm_min)
-        group = displayio.Group(max_size=len(timestr)+1, x=x, y=y)
+        group = displayio.Group(x=x, y=y)
         xpos = 0
         digit = self.selected_digit
         if digit >= 2:
             # Skip the colon
             digit += 1
         for index, ch in enumerate(timestr):
-            shader = displayio.ColorConverter()
             if index == digit:
                 rect = Rect(xpos-4, -8, 48, 64, fill=0x0)
                 group.append(rect)
-                shader = displayio.Palette(2)
-                shader[0] = 0xffffff
-            sprite = displayio.TileGrid(self.assets[ch], x=xpos, pixel_shader=shader)
+            sprite = displayio.TileGrid(self.assets[ch], x=xpos, pixel_shader=self.assets[ch].pixel_shader)
             group.append(sprite)
             xpos += self.assets[ch].width + 8
         return group
@@ -46,15 +43,18 @@ class ClockApp:
         self.rtc.datetime = time.struct_time((yr, mon, day, hr + hour_delta, min + minute_delta, sec, 0, -1, -1))
 
     def process_input(self):
-        buttons = badge.gamepad.get_pressed() 
-        if buttons & badge.BTN_LEFT:
+        if badge.left:
             self.selected_digit = (self.selected_digit + 5 - 1) % 5
             return True
-        if buttons & badge.BTN_RIGHT:
+        if badge.right:
             self.selected_digit = (self.selected_digit + 1) % 5
             return True
-        if (buttons & badge.BTN_UP) or (buttons & badge.BTN_DOWN):
-            direction = 1 if buttons & badge.BTN_UP else -1
+        direction = 0
+        if badge.up:
+            direction = 1
+        if badge.down:
+            direction = -1
+        if direction != 0:
             if self.selected_digit == 0:
                 self.update_time(10 * direction)
             elif self.selected_digit == 1:
@@ -66,7 +66,7 @@ class ClockApp:
             else:
                 return False
             return True
-        if buttons & badge.BTN_ACTION:
+        if badge.action:
             self.running = False
             return True
         return False

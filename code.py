@@ -42,12 +42,9 @@ last_addon = None
 badge.vibration = False
 badge.pixels.fill(0)
 while True:
-    buttons = badge.gamepad.get_pressed()
-    if buttons:
-        # Wait until the action button is released
+    if badge.action:
         badge.vibration = True
-        while badge.gamepad.get_pressed():
-            pass
+        time.sleep(0.1)
         badge.vibration = False
         menu.run()
         main_screen()
