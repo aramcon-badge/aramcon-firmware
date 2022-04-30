@@ -1,7 +1,11 @@
+import time
+
 from arambadge import badge
 import displayio
 import terminalio
 from adafruit_display_text import bitmap_label
+
+SECONDS_TO_SLEEP_BETWEEN_UPDATES = 0.16
 
 def change_brightness(amount):
     for i in range(len(badge.pixels)):
@@ -58,6 +62,7 @@ exit the application."""
         self.render_instruction_screen()
         while self.running:
             self.process_input()
+            time.sleep(SECONDS_TO_SLEEP_BETWEEN_UPDATES)
 
     def cleanup(self):
         badge.pixels[0] = (0, 0, 0)
