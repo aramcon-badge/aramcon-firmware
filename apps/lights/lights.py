@@ -76,15 +76,8 @@ class App:
         return False
 
     def render_instruction_screen(self):
-        text = """--- Flashlight ---
-Use the LEFT/RIGHT buttons to select
-a color to modify
-
-Use the UP/DOWN buttons to control the
-brightness of the selected color
-
-Press the action button to
-exit the application."""
+        with open("/apps/lights/README.txt") as readme:
+            text = readme.read()
         print(text)
 
         screen = displayio.Group()
