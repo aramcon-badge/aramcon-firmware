@@ -31,6 +31,25 @@ class App:
             )
             badge.pixels[i] = tuple(pixel_lst)
 
+    def flash_selected_color(self):
+        pixels_backup = tuple(badge.pixels)
+
+        selected_color = [0, 0, 0]
+        selected_color[self.color_index] = 20
+        selected_color = tuple(selected_color)
+
+        for _ in range(2):
+            badge.pixels[0] = (0, 0, 0)
+            badge.pixels[1] = (0, 0, 0)
+            time.sleep(0.1)
+
+            badge.pixels[0] = selected_color
+            badge.pixels[1] = selected_color
+            time.sleep(0.1)
+
+        badge.pixels[0] = pixels_backup[0]
+        badge.pixels[1] = pixels_backup[1]
+
     def process_input(self, buttons):
         if buttons & badge.BTN_ACTION:
             self.cleanup()
@@ -46,10 +65,12 @@ class App:
 
         if self.button_up(buttons, badge.BTN_LEFT):
             self.color_index = add_in_range(self.color_index, -1, 0, 2)
+            self.flash_selected_color()
             return True
 
         if self.button_up(buttons, badge.BTN_RIGHT):
             self.color_index = add_in_range(self.color_index, 1, 0, 2)
+            self.flash_selected_color()
             return True
 
         return False
@@ -85,6 +106,7 @@ exit the application."""
     def run(self):
         self.running = True
         self.render_instruction_screen()
+        self.flash_selected_color()
         while self.running:
             print(self.color_index)
             print(badge.pixels)
