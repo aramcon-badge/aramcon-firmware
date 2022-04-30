@@ -7,35 +7,60 @@ from adafruit_display_text import bitmap_label
 
 SECONDS_TO_SLEEP_BETWEEN_UPDATES = 0.16
 
-def change_brightness(amount):
-    for i in range(len(badge.pixels)):
-        badge.pixels[i] = tuple(max(min((value + amount), 0xff), 0)
-                                for value in badge.pixels[i])
+def add_in_range(number, addition, range_min, range_max):
+    return min(range_max, max(range_min, (number + addition)))
+
 
 class App:
     def __init__(self):
-        pass
+        self.prev_buttons = 0
+        self.color_index = 0
 
-    def process_input(self):
-        buttons = badge.gamepad.get_pressed()
+    def button_up(self, buttons, button_mask):
+        return ((self.prev_buttons & button_mask)
+                and not (buttons & button_mask))
+
+    def change_brightness(self, amount):
+        for i in range(len(badge.pixels)):
+            pixel_lst = list(badge.pixels[i])
+            pixel_lst[self.color_index] = add_in_range(
+                pixel_lst[self.color_index],
+                amount,
+                0,
+                0xff
+            )
+            badge.pixels[i] = tuple(pixel_lst)
+
+    def process_input(self, buttons):
         if buttons & badge.BTN_ACTION:
             self.cleanup()
             return True
 
         if buttons & badge.BTN_UP:
-            change_brightness(5)
+            self.change_brightness(15)
             return True
 
         if buttons & badge.BTN_DOWN:
-            change_brightness(-5)
+            self.change_brightness(-15)
+            return True
+
+        if self.button_up(buttons, badge.BTN_LEFT):
+            self.color_index = add_in_range(self.color_index, -1, 0, 2)
+            return True
+
+        if self.button_up(buttons, badge.BTN_RIGHT):
+            self.color_index = add_in_range(self.color_index, 1, 0, 2)
             return True
 
         return False
 
     def render_instruction_screen(self):
         text = """--- Flashlight ---
+Use the LEFT/RIGHT buttons to select
+a color to modify
+
 Use the UP/DOWN buttons to control the
-brightness
+brightness of the selected color
 
 Press the action button to
 exit the application."""
@@ -61,7 +86,11 @@ exit the application."""
         self.running = True
         self.render_instruction_screen()
         while self.running:
-            self.process_input()
+            print(self.color_index)
+            print(badge.pixels)
+            buttons = badge.gamepad.get_pressed()
+            self.process_input(buttons)
+            self.prev_buttons = buttons
             time.sleep(SECONDS_TO_SLEEP_BETWEEN_UPDATES)
 
     def cleanup(self):
