@@ -28,6 +28,11 @@ class Service(adafruit_ble.services.Service):
                 buffer = []
                 time.sleep(1)
 
+def change_brightness(amount):
+    for i in range(len(badge.pixels)):
+        badge.pixels[i] = tuple(max(min((value + amount), 0xff), 0)
+                                for value in badge.pixels[i])
+
 class App:
     def __init__(self):
         self.ble = BLERadio()
@@ -46,10 +51,21 @@ class App:
         if buttons & badge.BTN_ACTION:
             self.cleanup()
             return True
+
+        if buttons & badge.BTN_UP:
+            change_brightness(5)
+            return True
+
+        if buttons & badge.BTN_DOWN:
+            change_brightness(-5)
+            return True
+
         return False
 
     def render_instruction_screen(self):
-        text = """--- Flashlight as a service ---
+        text = """--- Flashlight ---
+Use the UP/DOWN buttons to control the
+brightness
 
 Connect using BLE to {mac:X}.
 Send 6 bytes to {service_uid} to set the
